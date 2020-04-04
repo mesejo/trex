@@ -1,0 +1,1 @@
+from .trex import compile
