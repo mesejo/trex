@@ -1,5 +1,8 @@
 from trex import compile
 import re
+from hypothesis import given, example
+from hypothesis.strategies import text, lists
+from string import ascii_letters
 
 
 def test_findall():
@@ -38,3 +41,17 @@ def test_sub():
 
     actual = pattern.sub(replace, "The kid Ray Steam save the day")
     assert "The kid Steamboy save the day" == actual
+
+
+@given(text(alphabet=ascii_letters, min_size=1))
+def test_single_string_match(s):
+    pattern = compile([s])
+    assert pattern.match(s) is not None
+
+
+@example(lst=['B', 'BA', 'B'])
+@given(lists(text(alphabet=ascii_letters, min_size=1)))
+def test_multiple_string_match(lst):
+    pattern = compile(lst)
+    for word in lst:
+        assert pattern.match(word) is not None

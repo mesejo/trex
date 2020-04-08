@@ -1,88 +1,78 @@
 import re
-
-
-class _Node:
-
-    def __init__(self, char):
-        self.char = char
-        self.lo = None
-        self.hi = None
-        self.eq = None
-        self.endpoint = False
-
-    def __repr__(self):
-        # useful in debugging
-        return ''.join(['[', self.char,
-                        ('' if not self.endpoint else ' <end>'),
-                        ('' if self.lo is None else ' lo: ' + self.lo.__repr__()),
-                        ('' if self.eq is None else ' eq: ' + self.eq.__repr__()),
-                        ('' if self.hi is None else ' hi: ' + self.hi.__repr__()), ']'])
-
-
-def _insert(node, string):
-    if not string:
-        return node
-
-    head, *tail = string
-    if node is None:
-        node = _Node(head)
-
-    if head < node.char:
-        node.lo = _insert(node.lo, string)
-    elif head > node.char:
-        node.hi = _insert(node.hi, string)
-    else:
-        if not tail:
-            node.endpoint = True
-        else:
-            node.eq = _insert(node.eq, tail)
-    return node
-
-
-def is_leave(node: _Node):
-    children = (node.eq, node.lo, node.hi)
-    return node.endpoint and not any(child is not None for child in children)
-
-
-def _to_pattern(node: _Node):
-    if is_leave(node):
-        return node.char
-
-    pattern = node.char
-    if node.eq is not None:
-        tail = _to_pattern(node.eq)
-        if node.endpoint:
-            tail = f'(?:{tail})?' if len(tail) > 1 else f'{tail}?'
-        pattern += tail
-
-    branches = [_to_pattern(child) for child in (node.lo, node.hi) if child is not None]
-
-    if not branches:
-        return pattern
-
-    branches.append(pattern)
-
-    alternation = any(len(branch) > 1 for branch in branches)  # requires |
-    return f'(?:{"|".join(branches)})' if alternation else f'[{"".join(branches)}]'
-
+from io import StringIO
 
 class _Trie:
-    root = None
 
     def __init__(self, words):
-        for word in words:
-            self.append(word)
 
-    def append(self, string):
-        self.root = _insert(self.root, string)
+        data = {}
+        self.root = {(r'\b', False): data}
+        for word in set(words):
+            ref = data
+            for char in word[:-1]:
+                fk, tk = (char, False), (char, True)
+                key = tk if tk in ref else fk
+                ref[key] = key in ref and ref[key] or {}
+                ref = ref[key]
+            if word:
+                char = word[-1]
+                ref[(char, True)] = ref.pop((char, False), {})  # mark as end
+
+    def _to_regex(self):
+        # both data structures are deque
+        stack = [*self.root.items()]
+        cumulative = StringIO()
+
+        while stack:
+
+            (char, end), children = stack.pop()
+            cumulative.write(char)
+
+            if children:
+
+                if end:  # the children are optional
+                    stack.append((('?', False), {}))
+
+                single, multiple = [], []
+                for key, values in children.items():
+                    if values:
+                        multiple.append((key, values))
+                    else:
+                        single.append((key, values))
+
+                character_set = len(single) > 1
+                choices = (multiple and single) or len(multiple) > 1
+                capture_group = choices or (end and multiple)
+
+                if capture_group:
+                    stack.append(((')', False), {}))
+
+                if character_set:
+                    stack.append(((']', False), {}))
+
+                for child in single:
+                    stack.append(child)
+
+                if character_set:
+                    stack.append((('[', False), {}))
+
+                if choices and single:
+                    stack.append((('|', False), {}))
+
+                for child in multiple:
+                    stack.append(child)
+                    stack.append((('|', False), {}))
+                else:
+                    if multiple:
+                        stack.pop()
+
+                if capture_group:
+                    stack.append((('(?:', False), {}))
+
+        return cumulative.getvalue()
 
     def compile(self, flags=0):
-        if self.root:
-            return re.compile(fr'\b{_to_pattern(self.root)}\b', flags=flags)
-        return re.compile('')
-
-    def __repr__(self):
-        return repr(self.root)
+        return re.compile(rf'{self._to_regex()}\b', flags=flags)
 
 
 def compile(words, flags=0):
