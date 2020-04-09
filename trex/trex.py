@@ -27,7 +27,7 @@ class _Trie:
                 ref[(char, True)] = ref.pop((char, False), {})  # mark as end
 
     def _to_regex(self):
-        # both data structures are deque
+
         stack = [*self.root.items()]
         cumulative = StringIO()
 
@@ -38,7 +38,7 @@ class _Trie:
 
             if children:
 
-                if end:  # the children are optional
+                if end:
                     stack.append(_OPTION)
 
                 single, multiple = [], []
@@ -48,23 +48,23 @@ class _Trie:
                     else:
                         single.append((key, values))
 
-                character_set = len(single) > 1
-                choices = (multiple and single) or len(multiple) > 1
-                capture_group = choices or (end and multiple)
+                requires_character_set = len(single) > 1
+                requires_alternation = (multiple and single) or len(multiple) > 1
+                requires_group = requires_alternation or (end and multiple)
 
-                if capture_group:
+                if requires_group:
                     stack.append(_CLOSE_PARENTHESIS)
 
-                if character_set:
+                if requires_character_set:
                     stack.append(_CLOSE_BRACKETS)
 
                 for child in single:
                     stack.append(child)
 
-                if character_set:
+                if requires_character_set:
                     stack.append(_OPEN_BRACKETS)
 
-                if choices and single:
+                if requires_alternation and single:
                     stack.append(_ALTERNATION)
 
                 if multiple:
@@ -75,7 +75,7 @@ class _Trie:
                         stack.append(_ALTERNATION)
                         stack.append(child)
 
-                if capture_group:
+                if requires_group:
                     stack.append(_OPEN_PARENTHESIS)
 
         return cumulative.getvalue()
