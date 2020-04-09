@@ -36,47 +36,48 @@ class _Trie:
             (char, end), children = stack.pop()
             cumulative.write(char)
 
-            if children:
+            if not children:
+                continue  # skip
 
-                if end:
-                    stack.append(_OPTION)
+            if end:
+                stack.append(_OPTION)
 
-                single, multiple = [], []
-                for key, values in children.items():
-                    if values:
-                        multiple.append((key, values))
-                    else:
-                        single.append((key, values))
+            single, multiple = [], []
+            for key, values in children.items():
+                if values:
+                    multiple.append((key, values))
+                else:
+                    single.append((key, values))
 
-                requires_character_set = len(single) > 1
-                requires_alternation = (multiple and single) or len(multiple) > 1
-                requires_group = requires_alternation or (end and multiple)
+            requires_character_set = len(single) > 1
+            requires_alternation = (multiple and single) or len(multiple) > 1
+            requires_group = requires_alternation or (end and multiple)
 
-                if requires_group:
-                    stack.append(_CLOSE_PARENTHESIS)
+            if requires_group:
+                stack.append(_CLOSE_PARENTHESIS)
 
-                if requires_character_set:
-                    stack.append(_CLOSE_BRACKETS)
+            if requires_character_set:
+                stack.append(_CLOSE_BRACKETS)
 
-                for child in single:
+            for child in single:
+                stack.append(child)
+
+            if requires_character_set:
+                stack.append(_OPEN_BRACKETS)
+
+            if requires_alternation and single:
+                stack.append(_ALTERNATION)
+
+            if multiple:
+                head, *tail = multiple
+                stack.append(head)
+
+                for child in tail:
+                    stack.append(_ALTERNATION)
                     stack.append(child)
 
-                if requires_character_set:
-                    stack.append(_OPEN_BRACKETS)
-
-                if requires_alternation and single:
-                    stack.append(_ALTERNATION)
-
-                if multiple:
-                    head, *tail = multiple
-                    stack.append(head)
-
-                    for child in tail:
-                        stack.append(_ALTERNATION)
-                        stack.append(child)
-
-                if requires_group:
-                    stack.append(_OPEN_PARENTHESIS)
+            if requires_group:
+                stack.append(_OPEN_PARENTHESIS)
 
         return cumulative.getvalue()
 
