@@ -1,6 +1,14 @@
 import re
 from io import StringIO
 
+_OPTION = (('?', False), {})
+_OPEN_PARENTHESIS = (('(?:', False), {})
+_CLOSE_PARENTHESIS = ((')', False), {})
+_OPEN_BRACKETS = (('[', False), {})
+_CLOSE_BRACKETS = ((']', False), {})
+_ALTERNATION = (('|', False), {})
+
+
 class _Trie:
 
     def __init__(self, words):
@@ -31,7 +39,7 @@ class _Trie:
             if children:
 
                 if end:  # the children are optional
-                    stack.append((('?', False), {}))
+                    stack.append(_OPTION)
 
                 single, multiple = [], []
                 for key, values in children.items():
@@ -45,29 +53,30 @@ class _Trie:
                 capture_group = choices or (end and multiple)
 
                 if capture_group:
-                    stack.append(((')', False), {}))
+                    stack.append(_CLOSE_PARENTHESIS)
 
                 if character_set:
-                    stack.append(((']', False), {}))
+                    stack.append(_CLOSE_BRACKETS)
 
                 for child in single:
                     stack.append(child)
 
                 if character_set:
-                    stack.append((('[', False), {}))
+                    stack.append(_OPEN_BRACKETS)
 
                 if choices and single:
-                    stack.append((('|', False), {}))
+                    stack.append(_ALTERNATION)
 
-                for child in multiple:
-                    stack.append(child)
-                    stack.append((('|', False), {}))
-                else:
-                    if multiple:
-                        stack.pop()
+                if multiple:
+                    head, *tail = multiple
+                    stack.append(head)
+
+                    for child in tail:
+                        stack.append(_ALTERNATION)
+                        stack.append(child)
 
                 if capture_group:
-                    stack.append((('(?:', False), {}))
+                    stack.append(_OPEN_PARENTHESIS)
 
         return cumulative.getvalue()
 
