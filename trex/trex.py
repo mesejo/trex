@@ -87,5 +87,29 @@ class _Trie:
 
 
 def compile(words: Sequence[str], flags: int = 0):
+    """
+    Create a regular expression object from a set of strings
+
+    Parameters
+    ----------
+    words : Sequence[str]
+            Sequence or set of strings to be compiled
+
+    flags : int, optional
+            This value can be used to modify the expression can be any of the flags in re
+
+    Returns
+    -------
+    Pattern
+            A regular expression object which can be used for matching using its match(), search() and other methods
+
+    Examples
+    --------
+    >>> import trex as tx
+    >>> pattern = tx.compile(['baby', 'bat', 'bad'])
+    >>> pattern.findall('The baby was scared by the bad bat.')
+    ['baby', 'bad', 'bat']
+    """
+
     """Compile a regular expression pattern, returning a pattern object."""
     return _Trie(words).compile(flags)
