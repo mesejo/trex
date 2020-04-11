@@ -1,5 +1,6 @@
 import re
 from io import StringIO
+from typing import Sequence
 
 _OPTION = (('?', False), {})
 _OPEN_PARENTHESIS = (('(?:', False), {})
@@ -85,5 +86,6 @@ class _Trie:
         return re.compile(rf'{self._to_regex()}\b', flags=flags)
 
 
-def compile(words, flags=0):
+def compile(words: Sequence[str], flags: int = 0):
+    """Compile a regular expression pattern, returning a pattern object."""
     return _Trie(words).compile(flags)
