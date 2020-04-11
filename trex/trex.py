@@ -111,5 +111,4 @@ def compile(words: Sequence[str], flags: int = 0):
     ['baby', 'bad', 'bat']
     """
 
-    """Compile a regular expression pattern, returning a pattern object."""
     return _Trie(words).compile(flags)
