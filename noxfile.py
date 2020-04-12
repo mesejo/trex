@@ -24,6 +24,4 @@ def lint(session):
 
 @nox.session(python=["3.6", "3.7", "3.8"])
 def test(session):
-    session.install("-r", "requirements-dev.txt")
-    session.run("python", "-m", "eland.tests.setup_tests")
-    session.run("pytest", "--doctest-modules", *(session.posargs or ("eland/",)))
+    session.run("pytest", "--doctest-modules", *(session.posargs or ("trex/",)))
