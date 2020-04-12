@@ -22,6 +22,8 @@ def lint(session):
     session.run("flake8", "--ignore=E501,W503,E402,E712", *SOURCE_FILES)
 
 
-@nox.session(python=["3.6", "3.7", "3.8"])
+@nox.session(python=["3.6"])
 def test(session):
-    session.run("pytest", "--doctest-modules", *(session.posargs or ("trex/",)))
+    session.run(
+        "pytest", "--doctest-modules", *(session.posargs or ("trex/",)), external=True
+    )
