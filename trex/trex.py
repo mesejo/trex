@@ -2,20 +2,19 @@ import re
 from io import StringIO
 from typing import Sequence
 
-_OPTION = (('?', False), {})
-_OPEN_PARENTHESIS = (('(?:', False), {})
-_CLOSE_PARENTHESIS = ((')', False), {})
-_OPEN_BRACKETS = (('[', False), {})
-_CLOSE_BRACKETS = ((']', False), {})
-_ALTERNATION = (('|', False), {})
+_OPTION = (("?", False), {})
+_OPEN_PARENTHESIS = (("(?:", False), {})
+_CLOSE_PARENTHESIS = ((")", False), {})
+_OPEN_BRACKETS = (("[", False), {})
+_CLOSE_BRACKETS = (("]", False), {})
+_ALTERNATION = (("|", False), {})
 
 
 class _Trie:
-
     def __init__(self, words):
 
         data = {}
-        self.root = {(r'\b', False): data}
+        self.root = {(r"\b", False): data}
         for word in set(words):
             ref = data
             for char in word[:-1]:
@@ -83,7 +82,7 @@ class _Trie:
         return cumulative.getvalue()
 
     def compile(self, flags=0):
-        return re.compile(rf'{self._to_regex()}\b', flags=flags)
+        return re.compile(rf"{self._to_regex()}\b", flags=flags)
 
 
 def compile(words: Sequence[str], flags: int = 0):
