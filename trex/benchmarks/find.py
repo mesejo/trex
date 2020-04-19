@@ -12,15 +12,17 @@ keyword_processor, compiled_re, union_re = None, None, None
 
 def get_word_of_length(str_length):
     # generate a random word of given length
-    return ''.join(random.choice(string.ascii_lowercase) for _ in range(str_length))
+    return "".join(random.choice(string.ascii_lowercase) for _ in range(str_length))
 
 
-all_words = [get_word_of_length(random.choice([3, 4, 5, 6, 7, 8])) for i in range(100000)]
+all_words = [
+    get_word_of_length(random.choice([3, 4, 5, 6, 7, 8])) for i in range(100000)
+]
 
 
 def setup(length):
     all_words_chosen = random.sample(all_words, 5000)
-    story = ' '.join(all_words_chosen)
+    story = " ".join(all_words_chosen)
 
     # get unique keywords from the list of words generated.
     unique_keywords_sublist = list(set(random.sample(all_words, length)))
@@ -34,7 +36,9 @@ def setup(length):
     keyword_processor.add_keywords_from_list(unique_keywords_sublist)
 
     global union_re
-    union_re = re.compile('|'.join([r'\b' + keyword + r'\b' for keyword in unique_keywords_sublist]))
+    union_re = re.compile(
+        "|".join([r"\b" + keyword + r"\b" for keyword in unique_keywords_sublist])
+    )
 
     return story
 
@@ -61,13 +65,9 @@ def equality_check(a, b):
 perfplot.show(
     setup=setup,
     n_range=[keywords_length for keywords_length in range(1000, 20001, 1000)],
-    kernels=[
-        tx_find,
-        ft_find,
-        union_find
-    ],
-    labels=['trex', 'flashtext', 'union_regex'],
+    kernels=[tx_find, ft_find, union_find],
+    labels=["trex", "flashtext", "union_regex"],
     xlabel="len(keywords)",
     equality_check=equality_check,
-    relative_to=0
+    relative_to=0,
 )
