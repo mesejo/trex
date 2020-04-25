@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.5"
+# command to run tests
+script:
+  - coverage run --source trex -m py.test
+before_install:
+  - pip install codecov
+  - pip install coverage
+after_success:
+  - codecov
+branches:
+  only:
+    - master
