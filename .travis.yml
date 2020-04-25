@@ -7,8 +7,8 @@ python:
 script:
   - coverage run --source trex -m py.test
 before_install:
+  - pip install -r requirements-dev.txt
   - pip install codecov
-  - pip install coverage
 after_success:
   - codecov
 branches:
