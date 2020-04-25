@@ -1,0 +1,5 @@
+flashtext==2.7
+hypothesis==5.10.4
+nox==2019.11.9
+perfplot==0.7.3
+pytest==5.4.1
