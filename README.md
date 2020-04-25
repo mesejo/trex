@@ -1,5 +1,11 @@
-This package contains a function for translating a 
-trie into a regex.
+<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trex_logo.png" width="150" height="150" align="right" /></a>
+
+# trex: Keyword extraction
+
+This package contains a function for efficiently  
+representing a set of keywords as regex. This regex can  
+be used to replace keywords in sentences or extract keywords  
+from sentences
 
 ## Why use trex?
 
