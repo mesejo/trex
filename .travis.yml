@@ -2,7 +2,7 @@ language: python
 python:
   - "3.6"
   - "3.7"
-  - "3.5"
+  - "3.8"
 # command to run tests
 script:
   - coverage run --source trex -m py.test
