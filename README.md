@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trex_logo.png" width="150" height="150" align="center" /></a>
+<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trex_logo.png" width="150" height="150"/></a>
 </p>
 
 
@@ -7,6 +7,9 @@
 
 This package contains a function for efficiently representing a set of keywords as regex. This regex can be used to replace keywords in sentences or extract keywords 
 from sentences
+
+[![Build Status](https://travis-ci.com/mesejo/trex.svg?branch=master)](https://travis-ci.com/mesejo/trex) 
+[![codecov](https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg)](https://codecov.io/gh/mesejo/trex)
 
 ## Why use trex?
 
