@@ -5,7 +5,7 @@ import string
 import perfplot
 from flashtext.keyword import KeywordProcessor
 
-from trex import compile
+from trrex import compile
 
 keyword_processor, compiled_re, union_re = None, None, None
 
@@ -62,12 +62,15 @@ def equality_check(a, b):
     return a == b
 
 
-perfplot.show(
-    setup=setup,
-    n_range=[keywords_length for keywords_length in range(1000, 20001, 1000)],
-    kernels=[tx_find, ft_find, union_find],
-    labels=["trex", "flashtext", "union_regex"],
-    xlabel="len(keywords)",
-    equality_check=equality_check,
-    relative_to=0,
-)
+if __name__ == '__main__':
+
+    perfplot.show(
+        setup=setup,
+        n_range=[keywords_length for keywords_length in range(1000, 20001, 1000)],
+        kernels=[tx_find, ft_find, union_find],
+        labels=["trrex", "flashtext", "union_regex"],
+        xlabel="len(keywords)",
+        equality_check=equality_check,
+        relative_to=0,
+    )
+

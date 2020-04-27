@@ -1,4 +1,4 @@
-from trex import compile
+from trrex import compile
 import re
 from hypothesis import given, example
 from hypothesis.strategies import text, lists

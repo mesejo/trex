@@ -1,10 +1,9 @@
 import nox
 
-
 SOURCE_FILES = (
     "setup.py",
     "noxfile.py",
-    "trex/",
+    "trrex/",
 )
 
 
@@ -25,5 +24,5 @@ def lint(session):
 @nox.session(python=["3.6"])
 def test(session):
     session.run(
-        "pytest", "--doctest-modules", *(session.posargs or ("trex/",)), external=True
+        "pytest", "--doctest-modules", *(session.posargs or ("trrex/",)), external=True
     )

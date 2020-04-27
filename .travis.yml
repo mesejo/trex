@@ -5,7 +5,7 @@ python:
   - "3.8"
 # command to run tests
 script:
-  - coverage run --source trex -m py.test
+  - coverage run --source trrex -m py.test
 before_install:
   - pip install -r requirements-dev.txt
   - pip install codecov

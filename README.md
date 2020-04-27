@@ -11,17 +11,35 @@ from sentences
 [![Build Status](https://travis-ci.com/mesejo/trex.svg?branch=master)](https://travis-ci.com/mesejo/trex) 
 [![codecov](https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg)](https://codecov.io/gh/mesejo/trex)
 
-## Why use trex?
+## Why use trrex?
 
 - Pure Python, no other dependencies
-- trex is fast, about 300 times faster than a regex union, and about 2.5 times faster than FlashText
+- trrex is fast, about 300 times faster than a regex union, and about 2.5 times faster than FlashText
 - Plays well with others, can be integrated easily with pandas
+
+## Install trrex
+
+Use pip,
+
+```bash
+pip install trrex
+```
+
+## Usage
+
+```python
+import trrex as tx
+
+pattern = tx.compile(['baby', 'bat', 'bad'])
+hits = pattern.findall('The baby was scared by the bad bat.')
+# hits = ['baby', 'bat', 'bad']
+```
 
 ## Why the name?
 
 Naming is difficult, but as we had to call it something:
 
-* trex: **t**rie to **re**ge**x**
+* trex: **tr**ie to **re**ge**x**
 * trex: [Tyrannosaurus rex](https://en.wikipedia.org/wiki/Tyrannosaurus), a large dinosaur species with small arms  (rex meaning "king" in Latin)
 
 ## Acknowledgments

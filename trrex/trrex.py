@@ -104,7 +104,7 @@ def compile(words: Sequence[str], flags: int = 0):
 
     Examples
     --------
-    >>> import trex as tx
+    >>> import trrex as tx
     >>> pattern = tx.compile(['baby', 'bat', 'bad'])
     >>> pattern.findall('The baby was scared by the bad bat.')
     ['baby', 'bad', 'bat']
