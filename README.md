@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trex_logo.png" width="150" height="150"/></a>
+<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trrex_logo.png" width="150" height="150"/></a>
 </p>
 
 
