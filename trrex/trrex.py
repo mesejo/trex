@@ -11,10 +11,12 @@ _ALTERNATION = (("|", False), {})
 
 
 class _Trie:
-    def __init__(self, words):
+    def __init__(self, words, left=r"\b", right=r"\b"):
 
         data = {}
-        self.root = {(r"\b", False): data}
+        self.left = left
+        self.right = right
+        self.root = {(left, False): data}
         for word in set(words):
             ref = data
             for char in word[:-1]:
@@ -82,10 +84,15 @@ class _Trie:
         return cumulative.getvalue()
 
     def compile(self, flags=0):
-        return re.compile(rf"{self._to_regex()}\b", flags=flags)
+        return re.compile(self.make(), flags=flags)
+
+    def make(self):
+        return rf"{self._to_regex()}{self.right}"
 
 
-def compile(words: Sequence[str], flags: int = 0):
+def compile(
+    words: Sequence[str], left: str = r"\b", right: str = r"\b", flags: int = 0
+):
     """
     Create a regular expression object from a set of strings
 
@@ -93,6 +100,12 @@ def compile(words: Sequence[str], flags: int = 0):
     ----------
     words : Sequence[str]
             Sequence or set of strings to be compiled
+
+    left : str, optional
+           Left delimiter for pattern
+
+    right : str, optional
+            Right delimiter for pattern
 
     flags : int, optional
             This value can be used to modify the expression can be any of the flags in re
@@ -110,4 +123,36 @@ def compile(words: Sequence[str], flags: int = 0):
     ['baby', 'bad', 'bat']
     """
 
-    return _Trie(words).compile(flags)
+    return _Trie(words, left=left, right=right).compile(flags)
+
+
+def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
+    """
+    Create a string that represents a regular expression object from a set of strings
+
+    Parameters
+    ----------
+    words : Sequence[str]
+        Sequence or set of strings to be made into a regex
+
+    left : str, optional
+           Left delimiter for pattern
+
+    right : str, optional
+            Right delimiter for pattern
+
+    Returns
+    -------
+    String
+            A string representing a regular expression pattern
+
+    Examples
+    --------
+    >>> import re
+    >>> import trrex as tx
+    >>> pattern = tx.make(['baby', 'bat', 'bad'], left=" ", right=" ")
+    >>> re.match(pattern, " baby ").group()
+    ' baby '
+    """
+
+    return _Trie(words, left=left, right=right).make()

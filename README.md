@@ -37,6 +37,22 @@ hits = pattern.findall('The baby was scared by the bad bat.')
 # hits = ['baby', 'bat', 'bad']
 ```
 
+### pandas
+
+```python
+import trrex as tx
+import pandas as pd
+
+frame = pd.DataFrame({
+    "txt": ["The baby", "The bat"]
+})
+pattern = tx.make(['baby', 'bat', 'bad'], left=r"\b(", right=r")\b") # need to specify capturing groups
+frame["match"] = frame["txt"].str.extract(pattern)
+hits = frame["match"].tolist()
+print(hits)
+# hits = ['baby', 'bad']
+```
+
 ## Why the name?
 
 Naming is difficult, but as we had to call it something:

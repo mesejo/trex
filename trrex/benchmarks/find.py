@@ -62,7 +62,7 @@ def equality_check(a, b):
     return a == b
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     perfplot.show(
         setup=setup,
@@ -73,4 +73,3 @@ if __name__ == '__main__':
         equality_check=equality_check,
         relative_to=0,
     )
-
