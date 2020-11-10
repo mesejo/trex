@@ -87,7 +87,7 @@ class _Trie:
         return rf"{self._to_regex()}{self.right}"
 
 
-def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
+def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
     """
     Create a string that represents a regular expression object from a set of strings
 
@@ -96,10 +96,10 @@ def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
     words : Sequence[str]
         Sequence or set of strings to be made into a regex
 
-    left : str, optional
+    prefix : str, optional
            Left delimiter for pattern
 
-    right : str, optional
+    suffix : str, optional
             Right delimiter for pattern
 
     Returns
@@ -116,4 +116,4 @@ def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
     ['baby', 'bad', 'bat']
     """
 
-    return _Trie(words, left=left, right=right).make()
+    return _Trie(words, left=prefix, right=suffix).make()

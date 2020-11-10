@@ -34,7 +34,7 @@ def setup(length):
     unique_keywords_sublist = list(set(random.sample(all_words, length)))
 
     global compiled_re
-    compiled_re = make(unique_keywords_sublist, left=r"\b(", right=r")\b")
+    compiled_re = make(unique_keywords_sublist, prefix=r"\b(", suffix=r")\b")
 
     global union_re
     union_re = fr"\b({'|'.join(unique_keywords_sublist)})\b"

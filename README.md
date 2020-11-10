@@ -46,7 +46,7 @@ import pandas as pd
 frame = pd.DataFrame({
     "txt": ["The baby", "The bat"]
 })
-pattern = tx.make(['baby', 'bat', 'bad'], left=r"\b(", right=r")\b") # need to specify capturing groups
+pattern = tx.make(['baby', 'bat', 'bad'], prefix=r"\b(", suffix=r")\b") # need to specify capturing groups
 frame["match"] = frame["txt"].str.extract(pattern)
 hits = frame["match"].tolist()
 print(hits)
