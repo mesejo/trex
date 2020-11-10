@@ -1,4 +1,10 @@
-from trrex import compile
+import re
+
+from trrex import make
+
+
+def compile(lst, flags=0, left=r"\b", right=r"\b"):
+    return re.compile(make(lst, left, right), flags)
 
 
 def test_left_pattern():

@@ -5,9 +5,13 @@ import string
 import perfplot
 from flashtext.keyword import KeywordProcessor
 
-from trrex import compile
+from trrex import make
 
 keyword_processor, compiled_re, union_re = None, None, None
+
+
+def compile(lst, flags=0, left=r"\b", right=r"\b"):
+    return re.compile(make(lst, left, right), flags)
 
 
 def get_word_of_length(str_length):

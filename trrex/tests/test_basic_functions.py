@@ -1,8 +1,12 @@
-from trrex import compile
+from trrex import make
 import re
 from hypothesis import given, example
 from hypothesis.strategies import text, lists
 from string import ascii_letters
+
+
+def compile(lst, flags=0, left=r"\b", right=r"\b"):
+    return re.compile(make(lst, left, right), flags)
 
 
 def test_findall():

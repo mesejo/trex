@@ -83,47 +83,8 @@ class _Trie:
 
         return cumulative.getvalue()
 
-    def compile(self, flags=0):
-        return re.compile(self.make(), flags=flags)
-
     def make(self):
         return rf"{self._to_regex()}{self.right}"
-
-
-def compile(
-    words: Sequence[str], left: str = r"\b", right: str = r"\b", flags: int = 0
-):
-    """
-    Create a regular expression object from a set of strings
-
-    Parameters
-    ----------
-    words : Sequence[str]
-            Sequence or set of strings to be compiled
-
-    left : str, optional
-           Left delimiter for pattern
-
-    right : str, optional
-            Right delimiter for pattern
-
-    flags : int, optional
-            This value can be used to modify the expression can be any of the flags in re
-
-    Returns
-    -------
-    Pattern
-            A regular expression object which can be used for matching using its match(), search() and other methods
-
-    Examples
-    --------
-    >>> import trrex as tx
-    >>> pattern = tx.compile(['baby', 'bat', 'bad'])
-    >>> pattern.findall('The baby was scared by the bad bat.')
-    ['baby', 'bad', 'bat']
-    """
-
-    return _Trie(words, left=left, right=right).compile(flags)
 
 
 def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
@@ -150,9 +111,9 @@ def make(words: Sequence[str], left: str = r"\b", right: str = r"\b"):
     --------
     >>> import re
     >>> import trrex as tx
-    >>> pattern = tx.make(['baby', 'bat', 'bad'], left=" ", right=" ")
-    >>> re.match(pattern, " baby ").group()
-    ' baby '
+    >>> pattern = tx.make(['baby', 'bat', 'bad'])
+    >>> re.findall(pattern, 'The baby was scared by the bad bat.')
+    ['baby', 'bad', 'bat']
     """
 
     return _Trie(words, left=left, right=right).make()
