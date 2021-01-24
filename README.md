@@ -8,7 +8,7 @@
 This package contains a function for efficiently representing a set of keywords as regex. This regex can be used to replace keywords in sentences or extract keywords 
 from sentences
 
-[![Build Status](https://travis-ci.com/mesejo/trex.svg?branch=master)](https://travis-ci.com/mesejo/trex) 
+[![Build Status](https://github.com/mesejo/trex/workflows/trrex/badge.svg)](https://github.com/mesejo/trex) 
 [![codecov](https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg)](https://codecov.io/gh/mesejo/trex)
 [![PyPI version](https://badge.fury.io/py/trrex.svg)](https://badge.fury.io/py/trrex)
 ![PyPI - Status](https://img.shields.io/pypi/status/trrex)
