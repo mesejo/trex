@@ -2,7 +2,7 @@ from string import ascii_letters
 
 import pandas as pd
 from hypothesis import given
-from hypothesis.strategies import text, lists
+from hypothesis.strategies import lists, text
 
 from trrex import make
 

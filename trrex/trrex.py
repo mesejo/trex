@@ -1,13 +1,12 @@
-import re
 from io import StringIO
-from typing import Sequence
+from typing import Dict, Sequence, Tuple
 
-_OPTION = (("?", False), {})
-_OPEN_PARENTHESIS = (("(?:", False), {})
-_CLOSE_PARENTHESIS = ((")", False), {})
-_OPEN_BRACKETS = (("[", False), {})
-_CLOSE_BRACKETS = (("]", False), {})
-_ALTERNATION = (("|", False), {})
+_OPTION: Tuple[Tuple, Dict] = (("?", False), {})
+_OPEN_PARENTHESIS: Tuple[Tuple, Dict] = (("(?:", False), {})
+_CLOSE_PARENTHESIS: Tuple[Tuple, Dict] = ((")", False), {})
+_OPEN_BRACKETS: Tuple[Tuple, Dict] = (("[", False), {})
+_CLOSE_BRACKETS: Tuple[Tuple, Dict] = (("]", False), {})
+_ALTERNATION: Tuple[Tuple, Dict] = (("|", False), {})
 
 
 class _Trie:
@@ -111,8 +110,8 @@ def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
     --------
     >>> import re
     >>> import trrex as tx
-    >>> pattern = tx.make(['baby', 'bat', 'bad'])
-    >>> re.findall(pattern, 'The baby was scared by the bad bat.')
+    >>> pattern = tx.make(["baby", "bat", "bad"])
+    >>> re.findall(pattern, "The baby was scared by the bad bat.")
     ['baby', 'bad', 'bat']
     """
 

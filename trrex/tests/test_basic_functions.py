@@ -1,8 +1,10 @@
-from trrex import make
 import re
-from hypothesis import given, example
-from hypothesis.strategies import text, lists
 from string import ascii_letters
+
+from hypothesis import example, given
+from hypothesis.strategies import lists, text
+
+from trrex import make
 
 
 def compile(lst, flags=0, left=r"\b", right=r"\b"):
