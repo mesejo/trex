@@ -1,4 +1,5 @@
 from io import StringIO
+from re import escape
 from typing import Dict, Sequence, Tuple
 
 _OPTION: Tuple[Tuple, Dict] = (("?", False), {})
@@ -18,13 +19,13 @@ class _Trie:
         self.root = {(left, False): data}
         for word in set(words):
             ref = data
-            for char in word[:-1]:
+            for char in map(escape, word[:-1]):
                 fk, tk = (char, False), (char, True)
                 key = tk if tk in ref else fk
                 ref[key] = key in ref and ref[key] or {}
                 ref = ref[key]
             if word:
-                char = word[-1]
+                char = escape(word[-1])
                 ref[(char, True)] = ref.pop((char, False), {})  # mark as end
 
     def _to_regex(self):
@@ -83,7 +84,7 @@ class _Trie:
         return cumulative.getvalue()
 
     def make(self):
-        return rf"{self._to_regex()}{self.right}"
+        return f"{self._to_regex()}{self.right}"
 
 
 def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):

@@ -1,5 +1,5 @@
 import re
-from string import ascii_letters
+from string import ascii_letters, punctuation
 
 from hypothesis import example, given
 from hypothesis.strategies import lists, text
@@ -49,6 +49,19 @@ def test_sub():
     assert "The kid Steamboy save the day" == actual
 
 
+def test_findall_punctuation():
+    words = ["bab.y", "b#ad", "b?at"]
+    pattern = compile(words)
+    assert pattern.findall("The bab.y was bitten by the b#ad b?at") == words
+
+
+def test_match_punctuation():
+    word = ":"
+    pattern = compile([word], left="", right="")
+    match = pattern.match(word)
+    assert match is not None
+
+
 @given(text(alphabet=ascii_letters, min_size=1))
 def test_single_string_match(s):
     pattern = compile([s])
@@ -59,5 +72,12 @@ def test_single_string_match(s):
 @given(lists(text(alphabet=ascii_letters, min_size=1)))
 def test_multiple_string_match(lst):
     pattern = compile(lst)
+    for word in lst:
+        assert pattern.match(word) is not None
+
+
+@given(lists(text(alphabet=ascii_letters + punctuation, min_size=1)))
+def test_multiple_string_match_punctuation(lst):
+    pattern = compile(lst, left="", right="")
     for word in lst:
         assert pattern.match(word) is not None
