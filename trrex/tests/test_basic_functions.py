@@ -62,6 +62,12 @@ def test_match_punctuation():
     assert match is not None
 
 
+def test_findall_emoticon():
+    emoticons = [":)", ":D", ":("]
+    pattern = compile(emoticons, left=r"(?<!\w)", right=r"(?!\w)")
+    assert pattern.findall("The smile :), and the laugh :D and the sad :(") == emoticons
+
+
 @given(text(alphabet=ascii_letters, min_size=1))
 def test_single_string_match(s):
     pattern = compile([s])
