@@ -1,0 +1,4 @@
+numpydoc
+ipython
+sphinx-rtd-theme
+pandas
