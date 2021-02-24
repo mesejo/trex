@@ -2,3 +2,5 @@ numpydoc
 ipython
 sphinx-rtd-theme
 pandas
+spacy
+regex

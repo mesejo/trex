@@ -2,6 +2,21 @@
 Quick overview
 ##############
 
+Find some simple instructions below
+
+Installation
+============
+
+First, obtain at least Python 3.6 and virtualenv if you do not already have them. Using a virtual environment is strongly
+recommended, since it will help you to avoid clutter in your system-wide libraries. Once the requirements are met, you can use pip:
+
+.. code-block:: bash
+
+   pip install trrex
+
+Examples
+========
+
 Here are some quick examples of what you can do with trrex.
 
 To begin, import re and trrex:
