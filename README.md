@@ -13,12 +13,6 @@ from sentences
 [![PyPI version](https://badge.fury.io/py/trrex.svg)](https://badge.fury.io/py/trrex)
 ![PyPI - Status](https://img.shields.io/pypi/status/trrex)
 
-## Why use trrex?
-
-- Pure Python, no other dependencies
-- trrex is fast, about 300 times faster than a regex union, and about 2.5 times faster than FlashText
-- Plays well with others, can be integrated easily with pandas
-
 ## Install trrex
 
 Use pip,
@@ -31,9 +25,10 @@ pip install trrex
 
 ```python
 import trrex as tx
+import re
 
-pattern = tx.compile(['baby', 'bat', 'bad'])
-hits = pattern.findall('The baby was scared by the bad bat.')
+pattern = tx.make(['baby', 'bat', 'bad'])
+hits = re.findall(pattern, 'The baby was scared by the bad bat.')
 # hits = ['baby', 'bat', 'bad']
 ```
 
@@ -52,6 +47,18 @@ hits = frame["match"].tolist()
 print(hits)
 # hits = ['baby', 'bad']
 ```
+
+## Why use trrex?
+
+- trrex builds a *better* regex pattern, than the simple regex union, therefore searching (and replacing) keywords is
+about 300 times faster than a regex union pattern, and about 2.5 times faster than FlashText algorithm. See below for a performance
+comparison:
+
+![Performance comparison](https://github.com/mesejo/trex/blob/images/find_comparison.png?raw=true)
+
+- Plays well with others, can be integrated easily with pandas, spacy and any other regex engine. See the [documentation](https://trrex.readthedocs.io/en/latest/integration.html)
+for examples.
+- Pure Python, no other dependencies
 
 ## Why the name?
 
