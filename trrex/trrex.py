@@ -1,41 +1,38 @@
+import re
 from io import StringIO
-from re import escape
 from typing import Dict, Sequence, Tuple
 
-_OPTION: Tuple[Tuple, Dict] = (("?", False), {})
-_OPEN_PARENTHESIS: Tuple[Tuple, Dict] = (("(?:", False), {})
-_CLOSE_PARENTHESIS: Tuple[Tuple, Dict] = ((")", False), {})
-_OPEN_BRACKETS: Tuple[Tuple, Dict] = (("[", False), {})
-_CLOSE_BRACKETS: Tuple[Tuple, Dict] = (("]", False), {})
-_ALTERNATION: Tuple[Tuple, Dict] = (("|", False), {})
+_OPTION: Tuple[str, Dict, bool] = ("?", {}, False)
+_OPEN_PARENTHESIS: Tuple[str, Dict, bool] = ("(?:", {}, False)
+_CLOSE_PARENTHESIS: Tuple[str, Dict, bool] = (")", {}, False)
+_OPEN_BRACKETS: Tuple[str, Dict, bool] = ("[", {}, False)
+_CLOSE_BRACKETS: Tuple[str, Dict, bool] = ("]", {}, False)
+_ALTERNATION: Tuple[str, Dict, bool] = ("|", {}, False)
 
 
 class _Trie:
     def __init__(self, words, left=r"\b", right=r"\b"):
 
-        data = {}
         self.left = left
         self.right = right
-        self.root = {(left, False): data}
-        for word in set(words):
-            ref = data
-            for char in map(escape, word[:-1]):
-                fk, tk = (char, False), (char, True)
-                key = tk if tk in ref else fk
-                ref[key] = key in ref and ref[key] or {}
-                ref = ref[key]
-            if word:
-                char = escape(word[-1])
-                ref[(char, True)] = ref.pop((char, False), {})  # mark as end
+        self.root = ({}, False)
+        for word in sorted(words):
+            node, is_terminal = self.root
+            size = len(word)
+            chars = map(re.escape, word)
+            for i, char in enumerate(chars):
+                is_terminal = i == size - 1
+                if char not in node:
+                    node[char] = ({}, is_terminal)
+                node, is_terminal = node[char]
 
     def _to_regex(self):
 
-        stack = [*self.root.items()]
+        stack = [(self.left,) + self.root]
         cumulative = StringIO()
 
         while stack:
-
-            (char, end), children = stack.pop()
+            char, children, end = stack.pop()
             cumulative.write(char)
 
             if not children:
@@ -45,11 +42,11 @@ class _Trie:
                 stack.append(_OPTION)
 
             single, multiple = [], []
-            for key, values in children.items():
+            for key, (values, terminal) in children.items():
                 if values:
-                    multiple.append((key, values))
+                    multiple.append((key, values, terminal))
                 else:
-                    single.append((key, values))
+                    single.append((key, values, terminal))
 
             requires_character_set = len(single) > 1
             requires_alternation = (multiple and single) or len(multiple) > 1
