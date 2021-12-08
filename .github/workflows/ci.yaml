@@ -1,4 +1,4 @@
-name: trrex
+name: test trrex package
 
 on:
   push:
