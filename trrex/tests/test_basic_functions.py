@@ -51,7 +51,7 @@ def test_sub():
 
 def test_findall_punctuation():
     words = ["bab.y", "b#ad", "b?at"]
-    pattern = compile(words)
+    pattern = compile(tuple(map(re.escape, word)) for word in words)
     assert pattern.findall("The bab.y was bitten by the b#ad b?at") == words
 
 
@@ -84,6 +84,7 @@ def test_multiple_string_match(lst):
 
 @given(lists(text(alphabet=ascii_letters + punctuation, min_size=1)))
 def test_multiple_string_match_punctuation(lst):
-    pattern = compile(lst, left="", right="")
+    words = [tuple(map(re.escape, word)) for word in lst]
+    pattern = compile(words, left="", right="")
     for word in lst:
         assert pattern.match(word) is not None

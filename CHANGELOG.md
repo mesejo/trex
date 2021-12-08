@@ -18,8 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Unused nox configuration (noxfile.py) from [@mesejo](https://github.com/mesejo).
+- Remove automatic escaping of characters of input words from [@mesejo](https://github.com/mesejo).
 
-## [0.0.4] - Unknown
+## [0.0.4] - 2021-02-21
 
 ### Added
 

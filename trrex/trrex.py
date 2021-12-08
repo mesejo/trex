@@ -1,4 +1,3 @@
-import re
 from io import StringIO
 from typing import Dict, Sequence, Tuple
 
@@ -19,8 +18,7 @@ class _Trie:
         for word in sorted(words):
             node, is_terminal = self.root
             size = len(word)
-            chars = map(re.escape, word)
-            for i, char in enumerate(chars):
+            for i, char in enumerate(word):
                 is_terminal = i == size - 1
                 if char not in node:
                     node[char] = ({}, is_terminal)
