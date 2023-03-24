@@ -5,7 +5,7 @@
 Advanced usage
 ==============
 
-By default trrex will use word boundaries (\\b) to delimit keywords, this could be problematic if the words contain
+By default trrex will use word boundaries :code:`"(\\b)"` to delimit keywords, this could be problematic if the words contain
 punctuation symbols. You can do the following for those cases:
 
 .. ipython:: python
@@ -29,7 +29,7 @@ In general, however, the regex meta characters need to be escaped in order to ma
 .. ipython:: python
 
     words = ["bab.y", "b#ad", "b?at"]
-    pattern = tx.make(tuple(map(re.escape, word)) for word in words)
+    pattern = tx.make(map(re.escape, words))
     pattern
 
 Notice that you need to use `re.escape <https://docs.python.org/3/library/re.html#re.escape>`_ for each character of the

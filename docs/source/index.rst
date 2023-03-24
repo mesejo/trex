@@ -3,11 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-trrex: Efficient keyword extraction with regex
-==============================================
+trrex: efficient keyword manipulation with regular expressions
+==============================================================
 
-This package contains a function for efficiently representing a set of keywords as regex. This regex can be used to
-replace keywords in sentences or extract keywords from sentences.
+The package includes a function that represents a collection of keywords (strings) as a regular expression. This regular expression
+can be used for multiple purposes, such as keyword replacement, keyword extraction, fuzzy matching, and other similar tasks.
 
 .. ipython:: python
 
@@ -18,43 +18,14 @@ replace keywords in sentences or extract keywords from sentences.
     re.findall(pattern, "The baby was scared by the bad bat.")
 
 
-
-
-Documentation
--------------
-
-**Getting Started**
-
-* :doc:`quick-overview`
+User Guide
+----------
 
 .. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: Getting Started
+   :maxdepth: 2
 
-   quick-overview
-
-**User Guide**
-
-* :doc:`usage`
-* :doc:`integration`
-
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: User Guide
-
+   quickstart
    usage
    integration
-
-**Help & Reference**
-
-* :doc:`api`
-
-
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :caption: Help & reference
-
    api
+

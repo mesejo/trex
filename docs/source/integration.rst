@@ -1,12 +1,11 @@
 .. currentmodule:: trrex
 .. _integration:
 
-================================
-Integration with other libraries
-================================
+============
+Integrations
+============
 
-As trrex builds a regex pattern, it can be used by any library that expects
-a regular expression
+As trrex builds a regular expression pattern, it can be used by any library that expects a regular expression
 
 Working with pandas
 -------------------

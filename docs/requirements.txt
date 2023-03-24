@@ -1,6 +1,11 @@
 numpydoc
 ipython
 sphinx-rtd-theme
+sphinx-copybutton
+sphinx-togglebutton
+sphinx-design
+sphinx-favicon
+pydata-sphinx-theme
 pandas
 spacy
 regex
