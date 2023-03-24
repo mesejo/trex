@@ -49,7 +49,6 @@ extensions = [
     "sphinx.ext.autodoc",
     "numpydoc",
     "IPython.sphinxext.ipython_directive",
-    "sphinx_favicon",
     "sphinx_design",
     "sphinx_copybutton",
     "sphinx_togglebutton",
