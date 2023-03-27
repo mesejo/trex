@@ -1,17 +1,20 @@
-<p align="center">
-<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trrex_logo.png" width="150" height="150"/></a>
-</p>
-
+<div  align="center">
+<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trrex_logo.png" width="150" height="150" alt="trrex logo"/></a>
+</div>
+&nbsp;
+<div align="center">
+<a href="https://pypi.org/project/trrex/"><img src="https://github.com/mesejo/trex/workflows/trrex/badge.svg" alt="Trrex"></a>
+<a href="https://pepy.tech/project/trrex"><img src="https://pepy.tech/badge/trrex" alt="Downloads"></a>
+<a href="https://pypi.org/project/trrex/"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
+<a href="https://codecov.io/gh/mesejo/trex"><img src="https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg" alt="Code Coverage Status"></a>
+<a href="https://badge.fury.io/py/trrex"><img src="https://badge.fury.io/py/trrex.svg" alt="PyPI Version"></a>
+</div>
 
 # Efficient keyword extraction with regex
 
 This package contains a function for efficiently representing a set of keywords as regex. This regex can be used to replace keywords in sentences or extract keywords
 from sentences
 
-[![Build Status](https://github.com/mesejo/trex/workflows/trrex/badge.svg)](https://github.com/mesejo/trex)
-[![codecov](https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg)](https://codecov.io/gh/mesejo/trex)
-[![PyPI version](https://badge.fury.io/py/trrex.svg)](https://badge.fury.io/py/trrex)
-![PyPI - Status](https://img.shields.io/pypi/status/trrex)
 
 ## Install trrex
 
