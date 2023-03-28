@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2023-03-28
+
 ### Added
 
 - CHANGELOG.md from [@mesejo](https://github.com/mesejo).
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Simplify tree construction from [@mesejo](https://github.com/mesejo).
+- Updated documentation theme from [@mesejo](https://github.com/mesejo).
 
 ### Removed
 
