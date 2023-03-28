@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-trrex: efficient keyword manipulation with regular expressions
+trrex: efficient keyword mining with regular expressions
 ==============================================================
 
 The package includes a function that represents a collection of keywords (strings) as a regular expression. This regular expression

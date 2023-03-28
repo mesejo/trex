@@ -1,20 +1,21 @@
 <div  align="center">
-<a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trrex_logo.png" width="150" height="150" alt="trrex logo"/></a>
+    <a href="https://github.com/mesejo/trex"><img src="https://raw.githubusercontent.com/mesejo/trex/images/trrex_logo.png" width="150" height="150" alt="trrex logo"/></a>
 </div>
 &nbsp;
 <div align="center">
-<a href="https://pypi.org/project/trrex/"><img src="https://github.com/mesejo/trex/workflows/trrex/badge.svg" alt="Trrex"></a>
-<a href="https://pepy.tech/project/trrex"><img src="https://pepy.tech/badge/trrex" alt="Downloads"></a>
-<a href="https://pypi.org/project/trrex/"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
-<a href="https://codecov.io/gh/mesejo/trex"><img src="https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg" alt="Code Coverage Status"></a>
-<a href="https://badge.fury.io/py/trrex"><img src="https://badge.fury.io/py/trrex.svg" alt="PyPI Version"></a>
+    <a href="https://pypi.org/project/trrex/"><img src="https://github.com/mesejo/trex/workflows/trrex/badge.svg" alt="Trrex"></a>
+    <a href="https://pepy.tech/project/trrex"><img src="https://pepy.tech/badge/trrex" alt="Downloads"></a>
+    <a href="https://pypi.org/project/trrex/"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
+    <a href="https://codecov.io/gh/mesejo/trex"><img src="https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg" alt="Code Coverage Status"></a>
+    <a href="https://badge.fury.io/py/trrex"><img src="https://badge.fury.io/py/trrex.svg" alt="PyPI Version"></a>
+    <a href="https://trrex.readthedocs.io"><img src="https://readthedocs.org/projects/trrex/badge/?version=latest" alt="Documentation Status"></a>
 </div>
 
-# Efficient keyword extraction with regex
+# Efficient keyword mining with regular expressions
 
-This package contains a function for efficiently representing a set of keywords as regex. This regex can be used to replace keywords in sentences or extract keywords
-from sentences
-
+This package includes a pure Python function that enables you to represent a set of keywords (strings) as an efficient regular expression. 
+With this regular expression, you can perform various operations, such as replacing and extracting keywords. 
+The name of the package comes from the internal trie used to build the regular expression (**tr**ie to **re**ge**x**)
 
 ## Install trrex
 
@@ -63,12 +64,13 @@ comparison:
 for examples.
 - Pure Python, no other dependencies
 
-## Why the name?
 
-Naming is difficult, but as we had to call it something:
 
-* trex: **tr**ie to **re**ge**x**
-* trex: [Tyrannosaurus rex](https://en.wikipedia.org/wiki/Tyrannosaurus), a large dinosaur species with small arms  (rex meaning "king" in Latin)
+
+## Issues
+
+If you have any issues with this repository, please don't hesitate to [raise them](https://github.com/mesejo/trex/issues/new). 
+It is actively maintained, and we will do our best to help you.
 
 ## Acknowledgments
 
@@ -76,3 +78,7 @@ This project is based on the following resources:
 
 - [Speed up regex](https://stackoverflow.com/questions/42742810/speed-up-millions-of-regex-replacements-in-python-3)
 - [Triegex](https://github.com/ZhukovAlexander/triegex)
+
+## Liked the work?
+If you've found this repository helpful, why not give it a star? It's an easy way to show your appreciation and support for the project. 
+Plus, it helps others discover it too!
