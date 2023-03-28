@@ -47,3 +47,19 @@ You can replace a keyword by using re.sub:
     keywords = tx.make(["baby", "bad", "bat"])
     replaced = re.sub(keywords, "bowl", "The bat is round")
     replaced
+
+How not to use it
+-----------------
+The code below makes a pattern for each word and hence does not take advantage of trrex. The code will offer no performance benefit against a standard Python string search.
+
+.. code-block:: python
+
+    import trrex as tx
+    import re
+
+    text = "The bad bat scared the baby"
+    words = ["bad", "baby", "bat"]
+    for word in words:
+        pattern = tx.make([word])
+        match = re.search(pattern, text)
+
