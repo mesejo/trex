@@ -3,12 +3,12 @@
 </div>
 &nbsp;
 <div align="center">
-    <a href="https://pypi.org/project/trrex/"><img src="https://github.com/mesejo/trex/workflows/trrex/badge.svg" alt="Trrex"></a>
+    <a href="https://github.com/mesejo/trex"><img src="https://github.com/mesejo/trex/workflows/trrex/badge.svg" alt="Trrex"></a>
     <a href="https://pepy.tech/project/trrex"><img src="https://pepy.tech/badge/trrex" alt="Downloads"></a>
-    <a href="https://pypi.org/project/trrex/"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
+    <a href="https://pypi.org/project/trrex"><img src="https://img.shields.io/pypi/v/trrex.svg" alt="PyPI Version"></a>
+    <a href="https://pypi.org/project/trrex"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
     <a href="https://codecov.io/gh/mesejo/trex"><img src="https://codecov.io/gh/mesejo/trex/branch/master/graph/badge.svg" alt="Code Coverage Status"></a>
-    <a href="https://badge.fury.io/py/trrex"><img src="https://badge.fury.io/py/trrex.svg" alt="PyPI Version"></a>
-    <a href="https://trrex.readthedocs.io"><img src="https://readthedocs.org/projects/trrex/badge/?version=latest" alt="Documentation Status"></a>
+     <a href="https://trrex.readthedocs.io"><img src="https://readthedocs.org/projects/trrex/badge/?version=latest" alt="Documentation Status"></a>
 </div>
 
 # Efficient keyword mining with regular expressions
