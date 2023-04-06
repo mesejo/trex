@@ -11,11 +11,11 @@
      <a href="https://trrex.readthedocs.io"><img src="https://readthedocs.org/projects/trrex/badge/?version=latest" alt="Documentation Status"></a>
 </div>
 
-# Efficient keyword mining with regular expressions
+# Efficient string matching with regular expressions
 
 This package includes a pure Python function that enables you to represent a set of keywords (strings) as an efficient regular expression. 
-With this regular expression, you can perform various operations, such as replacing and extracting keywords. 
-The name of the package comes from the internal trie used to build the regular expression (**tr**ie to **re**ge**x**)
+With this regular expression, you can perform various operations, such as replacing, extracting and matching keywords. 
+The name of the package comes from the internal trie used to build the regular expression (**TR**ie to **RE**ge**X**)
 
 ## Install trrex
 
