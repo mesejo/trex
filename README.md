@@ -13,7 +13,7 @@
 
 # Efficient string matching with regular expressions
 
-This package includes a pure Python function that enables you to represent a set of keywords (strings) as an efficient regular expression. 
+This package includes a pure Python function that enables you to represent a set of strings as a regular expression. 
 With this regular expression, you can perform various operations, such as replacing, extracting and matching keywords. 
 The name of the package comes from the internal trie used to build the regular expression (**TR**ie to **RE**ge**X**)
 
@@ -54,7 +54,7 @@ print(hits)
 
 ## Why use trrex?
 
-- trrex builds a *better* regex pattern, than the simple regex union, therefore searching (and replacing) keywords is
+- trrex builds a *better* regex pattern, than the simple regex union, therefore searching (and replacing) strings is
 about 300 times faster than a regex union pattern, and about 2.5 times faster than FlashText algorithm. See below for a performance
 comparison:
 
