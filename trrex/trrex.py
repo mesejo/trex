@@ -1,54 +1,69 @@
 from io import StringIO
-from typing import Dict, Sequence, Tuple
+from typing import Sequence
 
-_OPTION: Tuple[str, Dict, bool] = ("?", {}, False)
-_OPEN_PARENTHESIS: Tuple[str, Dict, bool] = ("(?:", {}, False)
-_CLOSE_PARENTHESIS: Tuple[str, Dict, bool] = (")", {}, False)
-_OPEN_BRACKETS: Tuple[str, Dict, bool] = ("[", {}, False)
-_CLOSE_BRACKETS: Tuple[str, Dict, bool] = ("]", {}, False)
-_ALTERNATION: Tuple[str, Dict, bool] = ("|", {}, False)
+from .parse import parse
+
+
+class _TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.end = False
+
+
+_OPTION = ("?", _TrieNode())
+_OPEN_PARENTHESIS = ("(?:", _TrieNode())
+_CLOSE_PARENTHESIS = (")", _TrieNode())
+_OPEN_BRACKETS = ("[", _TrieNode())
+_CLOSE_BRACKETS = ("]", _TrieNode())
+_ALTERNATION = ("|", _TrieNode())
 
 
 class _Trie:
-    def __init__(self, words, left=r"\b", right=r"\b"):
-
+    def __init__(self, words, patterns, left=r"\b", right=r"\b"):
+        self.root = _TrieNode()
         self.left = left
         self.right = right
-        self.root = ({}, False)
-        for word in sorted(words):
-            node, is_terminal = self.root
-            size = len(word)
-            for i, char in enumerate(word):
-                is_terminal = i == size - 1
-                if char not in node:
-                    node[char] = ({}, is_terminal)
-                node, is_terminal = node[char]
+
+        for word in words:
+            node = self.root
+            for char in word:
+                if char not in node.children:
+                    node.children[char] = _TrieNode()
+                node = node.children[char]
+            node.end = True
+
+        for pattern in map(parse, patterns):
+            node = self.root
+            for component in pattern:
+                if component not in node.children:
+                    node.children[component] = _TrieNode()
+                node = node.children[component]
+            node.end = True
 
     def _to_regex(self):
-
-        stack = [(self.left,) + self.root]
+        stack = [(self.left, self.root)]
         cumulative = StringIO()
 
         while stack:
-            char, children, end = stack.pop()
+            char, node = stack.pop()
             cumulative.write(char)
 
-            if not children:
+            if not node.children:
                 continue  # skip
 
-            if end:
+            if node.end:
                 stack.append(_OPTION)
 
             single, multiple = [], []
-            for key, (values, terminal) in children.items():
-                if values:
-                    multiple.append((key, values, terminal))
+            for key, child in node.children.items():
+                if child.children:
+                    multiple.append((key, child))
                 else:
-                    single.append((key, values, terminal))
+                    single.append((key, child))
 
             requires_character_set = len(single) > 1
             requires_alternation = (multiple and single) or len(multiple) > 1
-            requires_group = requires_alternation or (end and multiple)
+            requires_group = requires_alternation or (node.end and multiple)
 
             if requires_group:
                 stack.append(_CLOSE_PARENTHESIS)
@@ -82,13 +97,13 @@ class _Trie:
         return f"{self._to_regex()}{self.right}"
 
 
-def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
+def make(strings: Sequence[str], prefix: str = r"\b", suffix: str = r"\b") -> str:
     """
     Create a string that represents a regular expression object from a set of strings
 
     Parameters
     ----------
-    words : Sequence[str]
+    strings : Sequence[str]
         Sequence or set of strings to be made into a regex
 
     prefix : str, optional
@@ -111,4 +126,44 @@ def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
     ['baby', 'bad', 'bat']
     """
 
-    return _Trie(words, left=prefix, right=suffix).make()
+    return _Trie(strings, left=prefix, right=suffix).make()
+
+
+def assemble(
+    strings: Sequence[str],
+    patterns: Sequence[str],
+    prefix: str = r"\b",
+    suffix: str = r"\b",
+) -> str:
+    """
+    Create a string that represents a regular expression object from a set of strings
+
+    Parameters
+    ----------
+    strings : Sequence[str]
+        Sequence or set of strings to be made into a regex
+
+    patterns: Sequence[str]
+        Sequence or set of non-literal regular expression patterns to be made into a regex
+
+    prefix : str, optional
+           Left delimiter for pattern
+
+    suffix : str, optional
+            Right delimiter for pattern
+
+    Returns
+    -------
+    String
+            A string representing a regular expression pattern
+
+    Examples
+    --------
+    >>> import re
+    >>> import trrex as tx
+    >>> pattern = tx.make(["baby", "bat", "bad"])
+    >>> re.findall(pattern, "The baby was scared by the bad bat.")
+    ['baby', 'bad', 'bat']
+    """
+
+    return _Trie(strings, patterns, left=prefix, right=suffix).make()
