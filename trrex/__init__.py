@@ -1,6 +1,6 @@
 # flake8: noqa
 
 from ._version import __version__
-from .trrex import make
+from .trrex import assemble, make
 
 __author__ = "Daniel Mesejo"

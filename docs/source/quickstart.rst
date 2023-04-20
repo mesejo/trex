@@ -62,4 +62,3 @@ The code below makes a pattern for each word and hence does not take advantage o
     for word in words:
         pattern = tx.make([word])
         match = re.search(pattern, text)
-

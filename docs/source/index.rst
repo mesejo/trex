@@ -28,4 +28,3 @@ User Guide
    usage
    integration
    api
-

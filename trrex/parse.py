@@ -1,55 +1,49 @@
 from sre_constants import (
-    LITERAL,
-    IN,
+    ANY,
+    ASSERT,
+    ASSERT_NOT,
     AT,
+    AT_BEGINNING,
+    AT_BEGINNING_STRING,
+    AT_BOUNDARY,
+    AT_END,
+    AT_END_STRING,
+    AT_NON_BOUNDARY,
+    BRANCH,
     CATEGORY,
     CATEGORY_DIGIT,
-    RANGE,
-    MAX_REPEAT,
-    SUBPATTERN,
-    MAXREPEAT,
     CATEGORY_NOT_DIGIT,
-    CATEGORY_SPACE,
     CATEGORY_NOT_SPACE,
-    CATEGORY_WORD,
     CATEGORY_NOT_WORD,
-    AT_BOUNDARY,
-    AT_NON_BOUNDARY,
-    AT_BEGINNING_STRING,
-    AT_END_STRING,
-    ASSERT_NOT,
-    ASSERT,
-    NOT_LITERAL,
-    NEGATE,
-    MIN_REPEAT,
-    ANY,
+    CATEGORY_SPACE,
+    CATEGORY_WORD,
     GROUPREF,
-    MAXGROUPS,
-    GROUPREF_EXISTS,
-    SRE_FLAG_VERBOSE,
-    AT_BEGINNING,
-    AT_END,
-    error,
-    BRANCH,
+    IN,
+    LITERAL,
+    MAX_REPEAT,
+    MAXREPEAT,
+    MIN_REPEAT,
+    NEGATE,
+    NOT_LITERAL,
+    RANGE,
+    SUBPATTERN,
 )
-
-from sre_parse import (
-    Tokenizer,
-    State,
-    SubPattern,
-    WHITESPACE,
-    SPECIAL_CHARS,
-    REPEAT_CHARS,
+from sre_parse import (  # type: ignore
+    ASCIILETTERS,
+    CATEGORIES,
     DIGITS,
     ESCAPES,
-    CATEGORIES,
+    FLAGS,
+    GLOBAL_FLAGS,
     HEXDIGITS,
     OCTDIGITS,
-    ASCIILETTERS,
-    FLAGS,
-    Verbose,
+    REPEAT_CHARS,
+    SPECIAL_CHARS,
     TYPE_FLAGS,
-    GLOBAL_FLAGS,
+    WHITESPACE,
+    State,
+    SubPattern,
+    Tokenizer,
 )
 
 _REPEATCODES = frozenset({MIN_REPEAT, MAX_REPEAT})
@@ -277,7 +271,6 @@ def _parse_sub(source, state, verbose, nested):
     items = []
     itemsappend = items.append
     sourcematch = source.match
-    start = source.tell()
     while True:
         itemsappend(
             _parse(source, state, verbose, nested + 1, not nested and not items)
@@ -373,8 +366,6 @@ def _parse(source, state, verbose, nested, first=False):
             # character set
             set = []
             setappend = set.append
-            ##          if sourcematch(":"):
-            ##              pass # handle character classes
             if source.next == "[":
                 import warnings
 
@@ -566,18 +557,6 @@ def parse(string):
     items = sub_parse(source, state, 0, 0)
 
     return items_to_list(items)
-
-
-def shallow_items_to_list(item):
-    lst = []
-    for op, val in item:
-        if op == IN:
-            lst.append(extract_in_node(val))
-        elif op == LITERAL:
-            lst.append(extract_literal_node(val))
-        elif op == MAX_REPEAT:
-            lst.append(extract_max_repeat_node(val))
-    return lst
 
 
 def items_to_list(items):

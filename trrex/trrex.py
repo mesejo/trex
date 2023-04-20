@@ -19,7 +19,7 @@ _ALTERNATION = ("|", _TrieNode())
 
 
 class _Trie:
-    def __init__(self, words, patterns, left=r"\b", right=r"\b"):
+    def __init__(self, words, patterns=None, left=r"\b", right=r"\b"):
         self.root = _TrieNode()
         self.left = left
         self.right = right
@@ -32,13 +32,15 @@ class _Trie:
                 node = node.children[char]
             node.end = True
 
-        for pattern in map(parse, patterns):
-            node = self.root
-            for component in pattern:
-                if component not in node.children:
-                    node.children[component] = _TrieNode()
-                node = node.children[component]
-            node.end = True
+        if patterns is not None:
+            for pattern in map(parse, patterns):
+                for sub_pattern in pattern:
+                    node = self.root
+                    for component in sub_pattern:
+                        if component not in node.children:
+                            node.children[component] = _TrieNode()
+                        node = node.children[component]
+                    node.end = True
 
     def _to_regex(self):
         stack = [(self.left, self.root)]
