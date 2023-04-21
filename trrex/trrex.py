@@ -131,7 +131,7 @@ def make(strings: Sequence[str], prefix: str = r"\b", suffix: str = r"\b") -> st
     return _Trie(strings, left=prefix, right=suffix).make()
 
 
-def assemble(
+def merge(
     strings: Sequence[str],
     patterns: Sequence[str],
     prefix: str = r"\b",
@@ -163,7 +163,7 @@ def assemble(
     --------
     >>> import re
     >>> import trrex as tx
-    >>> pattern = tx.make(["baby", "bat", "bad"])
+    >>> pattern = tx.merge(["baby", "bat", "bad"])
     >>> re.findall(pattern, "The baby was scared by the bad bat.")
     ['baby', 'bad', 'bat']
     """
