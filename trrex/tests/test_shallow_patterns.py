@@ -89,3 +89,55 @@ def test_findall_no_limit_repeat(string):
         "bad",
         "bat",
     ]
+
+
+@given(from_regex(r"ba+d", fullmatch=True))
+def test_left_pattern(string):
+    pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], prefix="^"))
+    match = pattern.match(string)
+    assert match is not None
+
+
+@given(from_regex(r"ba+d", fullmatch=True))
+def test_left_pattern_no_match(string):
+    pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], prefix="^"))
+    match = pattern.match(f" {string}")
+    assert match is None
+
+
+@given(from_regex(r"ba+d", fullmatch=True))
+def test_right_pattern(string):
+    pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], suffix="$"))
+    match = pattern.match(string)
+    assert match is not None
+
+
+@given(from_regex(r"ba+d", fullmatch=True))
+def test_right_pattern_no_match(string):
+    pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], suffix="$"))
+    match = pattern.match(f"{string} ")
+    assert match is None
+
+
+@given(from_regex(r"ba+ddest", fullmatch=True))
+def test_prefix(string):
+    pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], suffix=r"\w+"))
+    match = pattern.match(f"{string} bat in the planet")
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"bebe+bop", fullmatch=True))
+def test_suffix(string):
+    pattern = re.compile(merge(["bat"], ["be+bop"], prefix=r"\w+"))
+    match = pattern.search(f"cowboy {string}")
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"ba+|baq|ba\d", fullmatch=True))
+def test_multiple_patterns(string):
+    pattern = re.compile(merge([], ["ba+", r"ba\d", "baq"]))
+    match = pattern.fullmatch(string)
+    assert match is not None
+    assert match.group() == string
