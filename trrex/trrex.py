@@ -58,7 +58,7 @@ class _Trie:
 
             single, multiple = [], []
             for key, child in node.children.items():
-                if child.children:
+                if child.children or len(key) > 1:
                     multiple.append((key, child))
                 else:
                     single.append((key, child))

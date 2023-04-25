@@ -106,7 +106,7 @@ def test_not_boundary_category():
 
 
 def test_escaped_parenthesis():
-    assert [["("]] == parse(r"\(")
+    assert [["\\("]] == parse(r"\(")
 
 
 def test_escaped_category_digit():
@@ -114,7 +114,11 @@ def test_escaped_category_digit():
 
 
 def test_escaped_parenthesis_and_pattern():
-    assert [["(", "a", "b", "c"]] == parse(r"\(abc")
+    assert [["\\(", "a", "b", "c"]] == parse(r"\(abc")
+
+
+def test_escaped_optional():
+    assert [["\\?", "a", "b", "c"]] == parse(re.escape("?abc"))
 
 
 def test_not_escaped_parenthesis():
@@ -138,7 +142,7 @@ def test_not_capturing_patterns():
 
 
 def test_no_nested_not_capturing_patterns_escape():
-    assert [["(", "?", ":", "a", "b", "c", ")"]] == parse(re.escape("(?:abc)"))
+    assert [["\\(", "\\?", ":", "a", "b", "c", "\\)"]] == parse(re.escape("(?:abc)"))
 
 
 def test_character_set_with_meta_characters():

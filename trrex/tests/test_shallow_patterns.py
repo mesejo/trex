@@ -141,3 +141,32 @@ def test_multiple_patterns(string):
     match = pattern.fullmatch(string)
     assert match is not None
     assert match.group() == string
+
+
+@given(from_regex(r"ba+|baq|ba\d", fullmatch=True))
+def test_multiple_patterns_with_capturing_group(string):
+    pattern = re.compile(
+        merge([], ["ba+", r"ba\d", "baq"], prefix=r"\b(", suffix=r")\b")
+    )
+    match = pattern.fullmatch(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex("ba+|bo{1,2}[st]{1,2}", fullmatch=True))
+def test_findall_punctuation(string):
+    words = ["bab.y", "b#ad", "b?at"]
+    patterns = ["ba+", r"bo{1,2}[st]{1,2}"] + [re.escape(word) for word in words]
+    pattern = re.compile(merge([], patterns))
+    assert pattern.findall(
+        f"The bab.y was bitten by the b#ad b?at and also find this {string}"
+    ) == words + [string]
+
+
+@given(from_regex("ba+|bo{1,2}", fullmatch=True))
+def test_match_max_repeat_different_versions(string):
+    patterns = ["ba+", r"bo{1,2}"]
+    pattern = re.compile(merge([], patterns))
+    match = pattern.fullmatch(string)
+    assert match is not None
+    assert match.group() == string

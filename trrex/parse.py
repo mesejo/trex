@@ -132,7 +132,7 @@ def _escape(source, escape, state):
         if len(escape) == 2:
             if c in ASCIILETTERS:
                 raise source.error("bad escape %s" % escape, len(escape))
-            return LITERAL, ord(escape[1])
+            return LITERAL, rf"\{escape[1]}"
     except ValueError:
         pass
     raise source.error("bad escape %s" % escape, len(escape))
@@ -590,6 +590,8 @@ def extract_at_node(val):
 
 
 def extract_literal_node(val):
+    if isinstance(val, str) and "\\" in val:
+        return val
     return chr(val)
 
 
