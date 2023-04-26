@@ -106,11 +106,11 @@ def test_not_boundary_category():
 
 
 def test_escaped_parenthesis():
-    assert [["\\("]] == parse(r"\(")
+    assert [[r"\("]] == parse(r"\(")
 
 
 def test_escaped_category_digit():
-    assert [["\\", "d"]] == parse(re.escape(r"\d"))
+    assert [["\\\\", "d"]] == parse(re.escape(r"\d"))
 
 
 def test_escaped_parenthesis_and_pattern():

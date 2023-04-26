@@ -170,3 +170,21 @@ def test_match_max_repeat_different_versions(string):
     match = pattern.fullmatch(string)
     assert match is not None
     assert match.group() == string
+
+
+@given(from_regex(r"\\d|\\b|\(", fullmatch=True))
+def test_match_escaped_prefix(string):
+    patterns = [re.escape(r"\d"), re.escape(r"\b"), re.escape(r"(")]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.search(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"abc[(?:]", fullmatch=True))
+def test_match_class_escape(string):
+    patterns = [re.escape(r"abc("), re.escape(r"abc?"), re.escape(r"abc:")]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.search(string)
+    assert match is not None
+    assert match.group() == string

@@ -32,7 +32,6 @@ from sre_parse import (  # type: ignore
     ASCIILETTERS,
     CATEGORIES,
     DIGITS,
-    ESCAPES,
     FLAGS,
     GLOBAL_FLAGS,
     HEXDIGITS,
@@ -47,6 +46,17 @@ from sre_parse import (  # type: ignore
 )
 
 _REPEATCODES = frozenset({MIN_REPEAT, MAX_REPEAT})
+
+ESCAPES = {
+    r"\a": (LITERAL, r"\a"),
+    r"\b": (LITERAL, r"\b"),
+    r"\f": (LITERAL, r"\f"),
+    r"\n": (LITERAL, r"\n"),
+    r"\r": (LITERAL, r"\r"),
+    r"\t": (LITERAL, r"\t"),
+    r"\v": (LITERAL, r"\v"),
+    r"\\": (LITERAL, r"\\"),
+}
 
 
 def _uniq(items):
