@@ -105,6 +105,14 @@ def test_not_boundary_category():
     assert [[r"\B"]] == parse(r"\B")
 
 
+def test_at_beginning_category():
+    assert [[r"\A"]] == parse(r"\A")
+
+
+def test_at_end_category():
+    assert [[r"\Z"]] == parse(r"\Z")
+
+
 def test_escaped_parenthesis():
     assert [[r"\("]] == parse(r"\(")
 

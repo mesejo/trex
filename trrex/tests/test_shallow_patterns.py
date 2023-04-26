@@ -172,9 +172,15 @@ def test_match_max_repeat_different_versions(string):
     assert match.group() == string
 
 
-@given(from_regex(r"\\d|\\b|\(", fullmatch=True))
+@given(from_regex(r"\\d|\\b|\(|\\s|\\w", fullmatch=True))
 def test_match_escaped_prefix(string):
-    patterns = [re.escape(r"\d"), re.escape(r"\b"), re.escape(r"(")]
+    patterns = [
+        re.escape(r"\d"),
+        re.escape(r"\b"),
+        re.escape(r"("),
+        re.escape(r"\s"),
+        re.escape(r"\w"),
+    ]
     pattern = re.compile(merge([], patterns, prefix="", suffix=""))
     match = pattern.search(string)
     assert match is not None
@@ -184,6 +190,15 @@ def test_match_escaped_prefix(string):
 @given(from_regex(r"abc[(?:]", fullmatch=True))
 def test_match_class_escape(string):
     patterns = [re.escape(r"abc("), re.escape(r"abc?"), re.escape(r"abc:")]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.search(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"abc\d|abc\s|abc[a-f]|abc\w", fullmatch=True))
+def test_common_prefix_and_character_class(string):
+    patterns = [r"abc\d", r"abc\s", "abc[a-f]", r"abc\w"]
     pattern = re.compile(merge([], patterns, prefix="", suffix=""))
     match = pattern.search(string)
     assert match is not None
