@@ -45,6 +45,14 @@ def test_literal_alternation():
     assert [["a"], ["b"]] == parse("a|b")
 
 
+def test_single_char_inside_character_class():
+    assert [["a"]] == parse("[a]")
+
+
+def test_hyphen_inside_character_class():
+    assert [["[a-]"]] == parse("[a-]")
+
+
 def test_complex_pattern():
     assert [["a{1,3}", "[b-z]", r"\d"]] == parse(r"a{1,3}[b-z]\d")
 
@@ -63,6 +71,10 @@ def test_two_char_literal():
 
 def test_complex_character_set():
     assert [[r"[\dabc]"]] == parse(r"[\dabc]")
+
+
+def test_character_set_with_hyphen():
+    assert [[r"[abc-]"]] == parse(r"[abc-]")
 
 
 def test_category_digit():
@@ -97,8 +109,20 @@ def test_range_and_category_digit():
     assert [[r"[a-e\d]"]] == parse(r"[a-e\d]")
 
 
+def test_escape_in_character_class():
+    assert [[r"[\t\a]"]] == parse(r"[\t\a]")
+
+
 def test_simple_max_repeat():
     assert [["a{1,3}"]] == parse("a{1,3}")
+
+
+def test_empty_repeat():
+    assert [["a", "{", "}"]] == parse("a{}")
+
+
+def test_half_repeat():
+    assert [["a", "{"]] == parse("a{")
 
 
 def test_not_digit_category():
@@ -133,8 +157,33 @@ def test_at_beginning_category():
     assert [[r"\A"]] == parse(r"\A")
 
 
+def test_repeat_at_most_one():
+    assert [["[a-z]{0,1}"]] == parse(r"[a-z]?")
+
+
+def test_min_repeat():
+    assert parse(r"a??") == [["a{0,1}?"]]
+
+
+def test_min_repeat_one_or_more():
+    assert parse(r"a+?") == [["a+?"]]
+
+
+def test_max_repeat_zero_or_more():
+    assert parse(r"a*") == [["a*"]]
+
+
+def test_min_repeat_zero_or_more():
+    assert parse(r"a*?") == [["a*?"]]
+
+
 def test_named_unicode():
     assert [[r"Ç"]] == parse(r"\N{LATIN CAPITAL LETTER C WITH CEDILLA}")
+
+
+def test_named_unicode_missing_name():
+    with pytest.raises(Exception):
+        parse(r"\N{foobarbruxu}")
 
 
 def test_unicode_character_set_escape():
@@ -247,3 +296,33 @@ def test_no_nested_patterns_assert_positive_lookbehind():
 def test_no_nested_patterns_assert_negative_lookbehind():
     with pytest.raises(NotImplementedError):
         parse("(?<!abc)def")
+
+
+def test_min_repeat_overflow_error():
+    with pytest.raises(OverflowError):
+        parse("a{4294967296,4294967297}")
+
+
+def test_max_repeat_overflow_error():
+    with pytest.raises(OverflowError):
+        parse("a{0,4294967297}")
+
+
+def test_min_larger_max_error():
+    with pytest.raises(Exception):
+        parse("a{5,2}")
+
+
+def test_bad_range_error():
+    with pytest.raises(Exception):
+        parse("[z-a]")
+
+
+def test_unterminated_character_set_error():
+    with pytest.raises(Exception):
+        parse("[z")
+
+
+def test_unterminated_character_set_with_range_error():
+    with pytest.raises(Exception):
+        parse("[z-")

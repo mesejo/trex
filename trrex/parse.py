@@ -22,7 +22,6 @@ from sre_constants import (
     NEGATE,
     NOT_LITERAL,
     RANGE,
-    SUBPATTERN,
 )
 from sre_parse import (  # type: ignore
     ASCIILETTERS,
@@ -86,19 +85,7 @@ def _escape(source, escape):
             chr(c)  # raise ValueError for invalid code
             return LITERAL, c
         elif c == "N" and source.istext:
-            import unicodedata
-
-            # named unicode escape e.g. \N{EM DASH}
-            if not source.match("{"):
-                raise source.error("missing {")
-            charname = source.getuntil("}", "character name")
-            try:
-                c = ord(unicodedata.lookup(charname))
-            except (KeyError, TypeError):
-                raise source.error(
-                    "undefined character name %r" % charname,
-                    len(charname) + len(r"\N{}"),
-                )
+            c = extract_named_unicode(source)
             return LITERAL, c
         elif c == "0":
             # octal escape
@@ -132,6 +119,23 @@ def _escape(source, escape):
     raise source.error("bad escape %s" % escape, len(escape))
 
 
+def extract_named_unicode(source):
+    import unicodedata
+
+    # named unicode escape e.g. \N{EM DASH}
+    if not source.match("{"):
+        raise source.error("missing {")
+    charname = source.getuntil("}", "character name")
+    try:
+        c = ord(unicodedata.lookup(charname))
+    except (KeyError, TypeError):
+        raise source.error(
+            "undefined character name %r" % charname,
+            len(charname) + len(r"\N{}"),
+        )
+    return c
+
+
 def _class_escape(source, escape):
     # handle escape code inside character class
     code = ESCAPES.get(escape)
@@ -163,19 +167,7 @@ def _class_escape(source, escape):
             chr(c)  # raise ValueError for invalid code
             return LITERAL, c
         elif c == "N" and source.istext:
-            import unicodedata
-
-            # named unicode escape e.g. \N{EM DASH}
-            if not source.match("{"):
-                raise source.error("missing {")
-            charname = source.getuntil("}", "character name")
-            try:
-                c = ord(unicodedata.lookup(charname))
-            except (KeyError, TypeError):
-                raise source.error(
-                    "undefined character name %r" % charname,
-                    len(charname) + len(r"\N{}"),
-                )
+            c = extract_named_unicode(source)
             return LITERAL, c
         elif c in OCTDIGITS:
             # octal escape (up to three digits)
@@ -378,10 +370,6 @@ def _parse_sub(source, state, nested):
                 )
             if item[0][0] in _REPEATCODES:
                 raise source.error("multiple repeat", source.tell() - here + len(this))
-            if item[0][0] is SUBPATTERN:
-                group, add_flags, del_flags, p = item[0][1]
-                if group is None and not add_flags and not del_flags:
-                    item = p
             if sourcematch("?"):
                 subpattern[-1] = (MIN_REPEAT, (min, max, item))
             else:
@@ -419,25 +407,46 @@ def extract_not_literal_node(val):
     return f"[^{node}]"
 
 
+def extract_min_repeat_node(val):
+    start, end, pat = val
+    p = ""
+
+    for op, v in pat:
+        if op == LITERAL:
+            p += extract_literal_node(v)
+        elif op == IN:
+            p += extract_in_node(v)
+
+    if end == MAXREPEAT:
+        if start == 0:
+            return f"{p}*?"
+        else:
+            return f"{p}+?"
+
+    return rf"{p}{{{start},{end}}}?"
+
+
 def _items_to_list_of_nodes(items):
-    res = []
+    patterns = []
     for item in items:
-        lst = []
+        nodes = []
         for op, val in item:
             if op == IN:
-                lst.append(extract_in_node(val))
+                nodes.append(extract_in_node(val))
             elif op == LITERAL:
-                lst.append(extract_literal_node(val))
+                nodes.append(extract_literal_node(val))
             elif op == NOT_LITERAL:
-                lst.append(extract_not_literal_node(val))
+                nodes.append(extract_not_literal_node(val))
             elif op == ANY:
-                lst.append(".")
+                nodes.append(".")
             elif op == AT:
-                lst.append(extract_at_node(val))
+                nodes.append(extract_at_node(val))
             elif op == MAX_REPEAT:
-                lst.append(extract_max_repeat_node(val))
-        res.append(lst)
-    return res
+                nodes.append(extract_max_repeat_node(val))
+            elif op == MIN_REPEAT:
+                nodes.append(extract_min_repeat_node(val))
+        patterns.append(nodes)
+    return patterns
 
 
 def extract_at_node(val):
@@ -483,7 +492,7 @@ def extract_in_node(val):
             start, end = v
             ii += f"{chr(start)}-{chr(end)}"
         elif a == LITERAL:
-            ii += chr(v)
+            ii += extract_literal_node(v)
         elif a == NEGATE:
             ii += "^"
     return ii if category and len(val) == 1 else f"[{ii}]"
@@ -512,6 +521,9 @@ def extract_max_repeat_node(val):
             p += extract_in_node(v)
 
     if end == MAXREPEAT:
-        return f"{p}+"
+        if start == 0:
+            return f"{p}*"
+        else:
+            return f"{p}+"
 
     return rf"{p}{{{start},{end}}}"

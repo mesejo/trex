@@ -209,7 +209,16 @@ def test_common_prefix_and_character_class(string):
 def test_negate_character_class(string):
     patterns = [r"[^abc]", r"[^d]"]
     pattern = re.compile(merge([], patterns, prefix="", suffix=""))
-    match = pattern.search(string)
+    match = pattern.match(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"[^abc]|[^a]", fullmatch=True))
+def test_negate_shared_character_class(string):
+    patterns = [r"[^abc]", r"[^a]"]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.match(string)
     assert match is not None
     assert match.group() == string
 
@@ -218,6 +227,24 @@ def test_negate_character_class(string):
 def test_different_repeat_patterns(string):
     patterns = [r"c?", r"a+", "b*"]
     pattern = re.compile(merge([], patterns, prefix="", suffix=""))
-    match = pattern.search(string)
+    match = pattern.fullmatch(string)
     assert match is not None
     assert match.group() == string
+
+
+@given(from_regex(r"[z-]|a|b", fullmatch=True))
+def test_hyphen_inside_character_class(string):
+    patterns = [r"[z-]", r"a", "b"]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.fullmatch(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"abc\d|a{}|abc|b{1,3}|a{0,2}", fullmatch=True))
+def test_empty_pattern(string):
+    patterns = [r"abc\d", r"a{}", "abc", "b{1,3}", "a{0,2}"]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.fullmatch(string)
+    assert match is not None
+    assert string == match.group()
