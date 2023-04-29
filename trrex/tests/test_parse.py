@@ -9,6 +9,18 @@ def test_basic_literal():
     assert [["a"]] == parse("a")
 
 
+def test_any():
+    assert [["."]] == parse(".")
+
+
+def test_at_beginning():
+    assert [["^", "a"]] == parse("^a")
+
+
+def test_at_end():
+    assert [["a", "$"]] == parse("a$")
+
+
 def test_max_repeat():
     assert [["a", "b+", "c"]] == parse(r"ab+c")
 
@@ -69,6 +81,18 @@ def test_range_and_chars_in_character_set():
     assert [["[a-exyz]"]] == parse("[a-exyz]")
 
 
+def test_digit_category_in_character_set():
+    assert [[r"\d"]] == parse(r"[\d]")
+
+
+def test_multiple_categories_in_character_set():
+    assert [[r"[\d\s]"]] == parse(r"[\d\s]")
+
+
+def test_different_encodings_in_character_set():
+    assert [[r"[Ça(]"]] == parse(r"[\N{LATIN CAPITAL LETTER C WITH CEDILLA}\x61\050]")
+
+
 def test_range_and_category_digit():
     assert [[r"[a-e\d]"]] == parse(r"[a-e\d]")
 
@@ -109,8 +133,56 @@ def test_at_beginning_category():
     assert [[r"\A"]] == parse(r"\A")
 
 
+def test_named_unicode():
+    assert [[r"Ç"]] == parse(r"\N{LATIN CAPITAL LETTER C WITH CEDILLA}")
+
+
+def test_unicode_character_set_escape():
+    assert [["[a-z]+"]] == parse(r"[\u0061-\u007a]+")
+
+
+def test_single_unicode():
+    assert [["a"]] == parse(r"\u0061")
+
+
+def test_unicode_character_set_escape_long():
+    assert [["[a-z]+"]] == parse(r"[\U00000061-\U0000007a]+")
+
+
+def test_single_unicode_long():
+    assert [["a"]] == parse(r"\U00000061")
+
+
+def test_unicode_error():
+    with pytest.raises(Exception):
+        parse(r"\u05+")
+
+
+def test_unicode_error_long():
+    with pytest.raises(Exception):
+        parse(r"\U05+")
+
+
+def test_hex_numbers():
+    assert [["a"]] == parse(r"\x61")
+
+
+def test_oct_numbers():
+    assert [["("]] == parse(r"\050")
+
+
 def test_at_end_category():
     assert [[r"\Z"]] == parse(r"\Z")
+
+
+def test_bad_escape():
+    with pytest.raises(Exception):
+        parse(r"\C")
+
+
+def test_bad_escape_in_character_set():
+    with pytest.raises(Exception):
+        parse(r"[\C]")
 
 
 def test_escaped_parenthesis():

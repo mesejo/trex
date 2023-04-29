@@ -203,3 +203,21 @@ def test_common_prefix_and_character_class(string):
     match = pattern.search(string)
     assert match is not None
     assert match.group() == string
+
+
+@given(from_regex(r"[^abc]|[^d]", fullmatch=True))
+def test_negate_character_class(string):
+    patterns = [r"[^abc]", r"[^d]"]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.search(string)
+    assert match is not None
+    assert match.group() == string
+
+
+@given(from_regex(r"c?|a+|b*", fullmatch=True))
+def test_different_repeat_patterns(string):
+    patterns = [r"c?", r"a+", "b*"]
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
+    match = pattern.search(string)
+    assert match is not None
+    assert match.group() == string

@@ -1,7 +1,5 @@
 from sre_constants import (
     ANY,
-    ASSERT,
-    ASSERT_NOT,
     AT,
     AT_BEGINNING,
     AT_BEGINNING_STRING,
@@ -16,7 +14,6 @@ from sre_constants import (
     CATEGORY_NOT_WORD,
     CATEGORY_SPACE,
     CATEGORY_WORD,
-    GROUPREF,
     IN,
     LITERAL,
     MAX_REPEAT,
@@ -31,14 +28,10 @@ from sre_parse import (  # type: ignore
     ASCIILETTERS,
     CATEGORIES,
     DIGITS,
-    FLAGS,
-    GLOBAL_FLAGS,
     HEXDIGITS,
     OCTDIGITS,
     REPEAT_CHARS,
     SPECIAL_CHARS,
-    TYPE_FLAGS,
-    WHITESPACE,
     State,
     SubPattern,
     Tokenizer,
@@ -62,7 +55,7 @@ def _uniq(items):
     return list(dict.fromkeys(items))
 
 
-def _escape(source, escape, state):
+def _escape(source, escape):
     # handle escape code in expression
     code = CATEGORIES.get(escape)
     if code:
@@ -130,14 +123,6 @@ def _escape(source, escape, state):
                             len(escape),
                         )
                     return LITERAL, c
-            # not an octal escape, so this is a group reference
-            group = int(escape[1:])
-            if group < state.groups:
-                if not state.checkgroup(group):
-                    raise source.error("cannot refer to an open group", len(escape))
-                state.checklookbehindgroup(group, source)
-                return GROUPREF, group
-            raise source.error("invalid group reference %d" % group, len(escape) - 1)
         if len(escape) == 2:
             if c in ASCIILETTERS:
                 raise source.error("bad escape %s" % escape, len(escape))
@@ -213,68 +198,7 @@ def _class_escape(source, escape):
     raise source.error("bad escape %s" % escape, len(escape))
 
 
-def _parse_flags(source, state, char):
-    sourceget = source.get
-    add_flags = 0
-    del_flags = 0
-    if char != "-":
-        while True:
-            flag = FLAGS[char]
-            if source.istext:
-                if char == "L":
-                    msg = "bad inline flags: cannot use 'L' flag with a str pattern"
-                    raise source.error(msg)
-            else:
-                if char == "u":
-                    msg = "bad inline flags: cannot use 'u' flag with a bytes pattern"
-                    raise source.error(msg)
-            add_flags |= flag
-            if (flag & TYPE_FLAGS) and (add_flags & TYPE_FLAGS) != flag:
-                msg = "bad inline flags: flags 'a', 'u' and 'L' are incompatible"
-                raise source.error(msg)
-            char = sourceget()
-            if char is None:
-                raise source.error("missing -, : or )")
-            if char in ")-:":
-                break
-            if char not in FLAGS:
-                msg = "unknown flag" if char.isalpha() else "missing -, : or )"
-                raise source.error(msg, len(char))
-    if char == ")":
-        state.flags |= add_flags
-        return None
-    if add_flags & GLOBAL_FLAGS:
-        raise source.error("bad inline flags: cannot turn on global flag", 1)
-    if char == "-":
-        char = sourceget()
-        if char is None:
-            raise source.error("missing flag")
-        if char not in FLAGS:
-            msg = "unknown flag" if char.isalpha() else "missing flag"
-            raise source.error(msg, len(char))
-        while True:
-            flag = FLAGS[char]
-            if flag & TYPE_FLAGS:
-                msg = "bad inline flags: cannot turn off flags 'a', 'u' and 'L'"
-                raise source.error(msg)
-            del_flags |= flag
-            char = sourceget()
-            if char is None:
-                raise source.error("missing :")
-            if char == ":":
-                break
-            if char not in FLAGS:
-                msg = "unknown flag" if char.isalpha() else "missing :"
-                raise source.error(msg, len(char))
-    assert char == ":"
-    if del_flags & GLOBAL_FLAGS:
-        raise source.error("bad inline flags: cannot turn off global flag", 1)
-    if add_flags & del_flags:
-        raise source.error("bad inline flags: flag turned on and off", 1)
-    return add_flags, del_flags
-
-
-def inner_parse(source, state, verbose, nested):
+def _parse_sub(source, state, nested):
     # parse a simple pattern
     subpattern = SubPattern(state)
 
@@ -293,19 +217,8 @@ def inner_parse(source, state, verbose, nested):
             break  # end of subpattern
         sourceget()
 
-        if verbose:
-            # skip whitespace and comments
-            if this in WHITESPACE:
-                continue
-            if this == "#":
-                while True:
-                    this = sourceget()
-                    if this is None or this == "\n":
-                        break
-                continue
-
         if this[0] == "\\":
-            code = _escape(source, this, state)
+            code = _escape(source, this)
             subpatternappend(code)
 
         elif this not in SPECIAL_CHARS:
@@ -489,14 +402,6 @@ def inner_parse(source, state, verbose, nested):
         else:
             raise AssertionError("unsupported special character %r" % (this,))
 
-    # unpack non-capturing groups
-    for i in range(len(subpattern))[::-1]:
-        op, av = subpattern[i]
-        if op is SUBPATTERN:
-            group, add_flags, del_flags, p = av
-            if group is None and not add_flags and not del_flags:
-                subpattern[i : i + 1] = p
-
     return subpattern
 
 
@@ -504,12 +409,17 @@ def parse(string):
     source = Tokenizer(string)
     state = State()
     state.str = string
-    items = sub_parse(source, state, 0, 0)
+    items = sub_parse(source, state, 0)
 
-    return items_to_list(items)
+    return _items_to_list_of_nodes(items)
 
 
-def items_to_list(items):
+def extract_not_literal_node(val):
+    node = extract_literal_node(val)
+    return f"[^{node}]"
+
+
+def _items_to_list_of_nodes(items):
     res = []
     for item in items:
         lst = []
@@ -518,12 +428,14 @@ def items_to_list(items):
                 lst.append(extract_in_node(val))
             elif op == LITERAL:
                 lst.append(extract_literal_node(val))
+            elif op == NOT_LITERAL:
+                lst.append(extract_not_literal_node(val))
+            elif op == ANY:
+                lst.append(".")
             elif op == AT:
                 lst.append(extract_at_node(val))
             elif op == MAX_REPEAT:
                 lst.append(extract_max_repeat_node(val))
-            elif op == SUBPATTERN or op == ASSERT_NOT or op == ASSERT:
-                raise NotImplementedError("Not nested patterns allowed")
         res.append(lst)
     return res
 
@@ -531,6 +443,10 @@ def items_to_list(items):
 def extract_at_node(val):
     if val == AT_BOUNDARY:
         return r"\b"
+    elif val == AT_BEGINNING:
+        return "^"
+    elif val == AT_END:
+        return "$"
     elif val == AT_NON_BOUNDARY:
         return r"\B"
     elif val == AT_BEGINNING_STRING:
@@ -568,15 +484,17 @@ def extract_in_node(val):
             ii += f"{chr(start)}-{chr(end)}"
         elif a == LITERAL:
             ii += chr(v)
+        elif a == NEGATE:
+            ii += "^"
     return ii if category and len(val) == 1 else f"[{ii}]"
 
 
-def sub_parse(source, state, verbose, nested):
+def sub_parse(source, state, nested):
     items = []
     items_append = items.append
     source_match = source.match
     while True:
-        items_append(inner_parse(source, state, verbose, nested + 1))
+        items_append(_parse_sub(source, state, nested + 1))
         if not source_match("|"):
             break
 
