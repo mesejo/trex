@@ -122,9 +122,12 @@ def test_right_pattern_no_match(string):
 @given(from_regex(r"ba+ddest", fullmatch=True))
 def test_prefix(string):
     pattern = re.compile(merge(["bat", "bebop"], ["ba+d"], suffix=r"\w+"))
-    match = pattern.match(f"{string} bat in the planet")
-    assert match is not None
-    assert match.group() == string
+    match = pattern.findall(f"{string} batsy in the bebopi planet")
+    assert match == [
+        string,
+        "batsy",
+        "bebopi",
+    ]
 
 
 @given(from_regex(r"bebe+bop", fullmatch=True))
@@ -244,7 +247,7 @@ def test_hyphen_inside_character_class(string):
 @given(from_regex(r"abc\d|a{}|abc|b{1,3}|a{0,2}", fullmatch=True))
 def test_empty_pattern(string):
     patterns = [r"abc\d", r"a{}", "abc", "b{1,3}", "a{0,2}"]
-    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
-    match = pattern.fullmatch(string)
+    pattern = re.compile(merge([], patterns, prefix="^", suffix="$"))
+    match = pattern.search(string)
     assert match is not None
-    assert string == match.group()
+    assert match.group() == string
