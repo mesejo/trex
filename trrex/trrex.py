@@ -33,14 +33,17 @@ class _Trie:
             node.end = True
 
         if patterns is not None:
+            sub_patterns = []
             for pattern in map(parse, patterns):
                 for sub_pattern in pattern:
-                    node = self.root
-                    for component in sub_pattern:
-                        if component not in node.children:
-                            node.children[component] = _TrieNode()
-                        node = node.children[component]
-                    node.end = True
+                    sub_patterns.append(sub_pattern)
+            for _, _, sub_pattern in sorted(sub_patterns):
+                node = self.root
+                for component in sub_pattern:
+                    if component not in node.children:
+                        node.children[component] = _TrieNode()
+                    node = node.children[component]
+                node.end = True
 
     def _to_regex(self):
         stack = [(self.left, self.root)]
@@ -138,7 +141,7 @@ def merge(
     suffix: str = r"\b",
 ) -> str:
     """
-    Create a string that represents a regular expression object from a set of strings
+    Create a string that represents a regular expression object from a set of strings and patterns
 
     Parameters
     ----------
@@ -163,9 +166,9 @@ def merge(
     --------
     >>> import re
     >>> import trrex as tx
-    >>> pattern = tx.merge(["baby", "bat", "bad"])
-    >>> re.findall(pattern, "The baby was scared by the bad bat.")
-    ['baby', 'bad', 'bat']
+    >>> pattern = tx.merge(["baby", "bat", "bad"], ["bax+y"])
+    >>> re.findall(pattern, "The baby was scared by the baxxy bat.")
+    ['baby', 'baxxy', 'bat']
     """
 
     return _Trie(strings, patterns, left=prefix, right=suffix).make()

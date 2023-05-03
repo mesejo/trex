@@ -247,7 +247,7 @@ def test_hyphen_inside_character_class(string):
 @given(from_regex(r"abc\d|a{}|abc|b{1,3}|a{0,2}", fullmatch=True))
 def test_empty_pattern(string):
     patterns = [r"abc\d", r"a{}", "abc", "b{1,3}", "a{0,2}"]
-    pattern = re.compile(merge([], patterns, prefix="^", suffix="$"))
+    pattern = re.compile(merge([], patterns, prefix="", suffix=""))
     match = pattern.search(string)
     assert match is not None
     assert match.group() == string

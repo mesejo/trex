@@ -419,33 +419,50 @@ def extract_min_repeat_node(val):
 
     if end == MAXREPEAT:
         if start == 0:
-            return f"{p}*?"
+            return f"{p}*?", start, end
         else:
-            return f"{p}+?"
+            return f"{p}+?", start, end
 
-    return rf"{p}{{{start},{end}}}?"
+    return rf"{p}{{{start},{end}}}?", start, end
 
 
 def _items_to_list_of_nodes(items):
     patterns = []
     for item in items:
         nodes = []
+        min_length, max_length = 0, 0
         for op, val in item:
             if op == IN:
                 nodes.append(extract_in_node(val))
+                min_length += 1
+                max_length += 1
             elif op == LITERAL:
                 nodes.append(extract_literal_node(val))
+                min_length += 1
+                max_length += 1
             elif op == NOT_LITERAL:
                 nodes.append(extract_not_literal_node(val))
+                min_length += 1
+                max_length += 1
             elif op == ANY:
                 nodes.append(".")
+                min_length += 1
+                max_length += 1
             elif op == AT:
                 nodes.append(extract_at_node(val))
+                min_length += 1
+                max_length += 1
             elif op == MAX_REPEAT:
-                nodes.append(extract_max_repeat_node(val))
+                max_repeat_node, mi, ma = extract_max_repeat_node(val)
+                nodes.append(max_repeat_node)
+                min_length += mi
+                max_length += ma
             elif op == MIN_REPEAT:
-                nodes.append(extract_min_repeat_node(val))
-        patterns.append(nodes)
+                min_repeat_node, mi, ma = extract_min_repeat_node(val)
+                nodes.append(min_repeat_node)
+                min_length += mi
+                max_length += ma
+        patterns.append((min_length, max_length, nodes))
     return patterns
 
 
@@ -522,8 +539,8 @@ def extract_max_repeat_node(val):
 
     if end == MAXREPEAT:
         if start == 0:
-            return f"{p}*"
+            return f"{p}*", start, end
         else:
-            return f"{p}+"
+            return f"{p}+", start, end
 
-    return rf"{p}{{{start},{end}}}"
+    return rf"{p}{{{start},{end}}}", start, end
