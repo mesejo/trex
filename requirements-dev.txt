@@ -3,5 +3,5 @@ flashtext==2.7
 hypothesis==5.10.4
 perfplot==0.7.3
 pytest==5.4.3
-pandas==1.1.4
+pandas==1.5.3
 pre-commit
