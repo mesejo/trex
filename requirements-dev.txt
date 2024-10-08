@@ -1,6 +1,6 @@
 coverage==5.1
 flashtext==2.7
-hypothesis==5.10.4
+hypothesis==5.49.0
 perfplot==0.7.3
 pytest==5.4.1
 pandas==1.1.4
