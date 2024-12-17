@@ -4,7 +4,7 @@ sphinx-rtd-theme
 sphinx-copybutton
 sphinx-togglebutton
 sphinx-design
-pydata-sphinx-theme==0.13.1
+pydata-sphinx-theme==0.16.1
 pandas
 spacy
 regex
