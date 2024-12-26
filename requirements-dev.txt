@@ -1,4 +1,4 @@
-coverage==5.1
+coverage==7.6.10
 flashtext==2.7
 hypothesis==6.113.0
 perfplot==0.10.2
