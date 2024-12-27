@@ -1,6 +1,11 @@
 # flake8: noqa
 
-from ._version import __version__
+import importlib.metadata
+
 from .trrex import make
 
-__author__ = "Daniel Mesejo"
+__all__ = [
+    "make"
+]
+
+__version__ = importlib.metadata.version(__package__)
