@@ -11,7 +11,7 @@ exceptiongroup==1.2.2 ; python_full_version < '3.11'
 filelock==3.16.1
 flashtext==2.7
 fonttools==4.55.3
-hypothesis==6.123.1
+hypothesis==6.123.2
 identify==2.6.3
 iniconfig==2.0.0
 kiwisolver==1.4.8
