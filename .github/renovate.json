@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "rangeStrategy": "widen",
+  "extends": [
+    "config:recommended", ":enablePreCommit", ":disableDependencyDashboard"
+  ],
+  "semanticCommits": "enabled",
+  "lockFileMaintenance": { "enabled": false },
+  "updateLockFiles": false,
+  "enabledManagers": [
+    "docker-compose",
+    "dockerfile",
+    "github-actions",
+    "pep621"
+  ],
+  "pre-commit": {
+    "enabled": false
+  },
+  "prHourlyLimit": 3,
+  "automerge": false,
+  "printConfig": true
+}
