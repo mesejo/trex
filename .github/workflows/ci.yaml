@@ -29,7 +29,9 @@ jobs:
       working-directory: ${{ github.workspace }}
 
     - name: test with coverage
-      run: uv run coverage run --source trrex -m pytest
+      run: uv run pytest --cov --cov-report=xml
 
-    - name: publish coverage
-      run: codecov
+    - name: upload coverage
+      uses: codecov/codecov-action@v5.1.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

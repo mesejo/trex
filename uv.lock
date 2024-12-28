@@ -239,6 +239,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/a1/70/de81bfec9ed38a64fc44a77c7665e20ca507fc3265597c28b0d989e4082e/coverage-7.6.10-pp39.pp310-none-any.whl", hash = "sha256:fd34e7b3405f0cc7ab03d54a334c17a9e802897580d964bd8c2001f4b9fd488f", size = 200223 },
 ]
 
+[package.optional-dependencies]
+toml = [
+    { name = "tomli", marker = "python_full_version <= '3.11'" },
+]
+
 [[package]]
 name = "cycler"
 version = "0.12.1"
@@ -825,6 +830,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pytest-cov"
+version = "6.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "coverage", extra = ["toml"] },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/be/45/9b538de8cef30e17c7b45ef42f538a94889ed6a16f2387a6c89e73220651/pytest-cov-6.0.0.tar.gz", hash = "sha256:fde0b595ca248bb8e2d76f020b465f3b107c9632e6a1d1705f17834c89dcadc0", size = 66945 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/36/3b/48e79f2cd6a61dbbd4807b4ed46cb564b4fd50a76166b1c4ea5c1d9e2371/pytest_cov-6.0.0-py3-none-any.whl", hash = "sha256:eee6f1b9e61008bd34975a4d5bab25801eb31898b032dd55addc93e96fcaaa35", size = 22949 },
+]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 source = { registry = "https://pypi.org/simple" }
@@ -981,6 +999,7 @@ version = "0.0.6"
 source = { editable = "." }
 dependencies = [
     { name = "pip" },
+    { name = "pytest-cov" },
 ]
 
 [package.dev-dependencies]
@@ -996,7 +1015,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pip", specifier = ">=24.3.1" }]
+requires-dist = [
+    { name = "pip", specifier = ">=24.3.1" },
+    { name = "pytest-cov", specifier = ">=6.0.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [
