@@ -22,12 +22,16 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering",
 ]
+dependencies = [
+    "pip>=24.3.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/mesejo/trex"
 
 [dependency-groups]
 dev = [
+    "codecov>=2.1.13",
     "coverage>=7.6.10",
     "flashtext>=2.7",
     "hypothesis>=6.123.1",
