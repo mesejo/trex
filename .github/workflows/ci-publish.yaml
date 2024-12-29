@@ -11,6 +11,8 @@ jobs:
     name: publish trrex to PyPI
     runs-on: ubuntu-latest
     environment: publish
+    permissions:
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
