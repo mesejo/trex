@@ -1,0 +1,27 @@
+name: publish trrex package to PyPI and TestPyPI
+
+on:
+  release:
+    types: [created]
+
+
+jobs:
+  publish:
+    name: publish trrex to PyPI
+    runs-on: ubuntu-latest
+    environment: publish
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.10
+
+      - name: install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: publish package
+        run: uv publish
