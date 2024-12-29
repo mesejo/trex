@@ -27,4 +27,4 @@ jobs:
       - name: publish package
         run: |
           uv build
-          uv publish
+          uv publish --trusted-publishing always
