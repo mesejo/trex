@@ -25,4 +25,6 @@ jobs:
           enable-cache: true
 
       - name: publish package
-        run: uv publish
+        run: |
+          uv build
+          uv publish
