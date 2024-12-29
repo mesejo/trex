@@ -3,7 +3,7 @@
 </div>
 &nbsp;
 <div align="center">
-    <a href="https://github.com/mesejo/trex"><img src="https://img.shields.io/github/actions/workflow/status/mesejo/trex/ci.yaml" alt="Trrex"></a>
+    <a href="https://github.com/mesejo/trex"><img src="https://img.shields.io/github/actions/workflow/status/mesejo/trex/ci-test.yaml" alt="Trrex"></a>
     <a href="https://pepy.tech/project/trrex"><img src="https://pepy.tech/badge/trrex" alt="Downloads"></a>
     <a href="https://pypi.org/project/trrex"><img src="https://img.shields.io/pypi/v/trrex.svg" alt="PyPI Version"></a>
     <a href="https://pypi.org/project/trrex"><img src="https://img.shields.io/pypi/status/trrex.svg" alt="Package Status"></a>
