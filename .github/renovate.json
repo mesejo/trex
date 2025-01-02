@@ -13,6 +13,12 @@
     "github-actions",
     "pep621"
   ],
+  "packageRules": [
+    {
+      "matchManagers": ["pip_requirements"],
+      "enabled": false
+    }
+  ],
   "pre-commit": {
     "enabled": false
   },
