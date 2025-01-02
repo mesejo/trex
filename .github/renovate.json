@@ -4,6 +4,7 @@
   "extends": [
     "config:recommended", ":enablePreCommit", ":disableDependencyDashboard"
   ],
+  "dependencyDashboard": false,
   "semanticCommits": "enabled",
   "lockFileMaintenance": { "enabled": false },
   "updateLockFiles": false,
