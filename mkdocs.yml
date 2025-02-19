@@ -1,0 +1,36 @@
+site_name: Trrex Docs
+
+theme:
+  name: "material"
+  logo: assets/images/trrex_logo.png
+  favicon: assets/images/trrex_favicon.ico
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+repo_name: mesejo/trex
+repo_url: https://github.com/mesejo/trex
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            separate_signature: true
+            show_signature_annotations: true
+
+nav:
+  - Quickstart: index.md
+  - Tutorials: tutorials.md
+  - How-To Guides: how_to_guides.md
+  - reference.md

@@ -7,6 +7,7 @@ from flashtext.keyword import KeywordProcessor
 
 from trrex import make
 
+
 keyword_processor, compiled_re, union_re = None, None, None
 
 
@@ -67,7 +68,6 @@ def equality_check(a, b):
 
 
 if __name__ == "__main__":
-
     perfplot.show(
         setup=setup,
         n_range=[keywords_length for keywords_length in range(1000, 20001, 1000)],
