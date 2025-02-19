@@ -7,6 +7,7 @@ from flashtext.keyword import KeywordProcessor
 
 from trrex import make
 
+
 keyword_processor, compiled_re, union_re = None, None, None
 
 
@@ -37,7 +38,7 @@ def setup(length):
     compiled_re = make(unique_keywords_sublist, prefix=r"\b(", suffix=r")\b")
 
     global union_re
-    union_re = fr"\b({'|'.join(unique_keywords_sublist)})\b"
+    union_re = rf"\b({'|'.join(unique_keywords_sublist)})\b"
 
     global keyword_processor
     keyword_processor = KeywordProcessor()

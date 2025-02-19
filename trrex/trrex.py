@@ -1,6 +1,7 @@
 from io import StringIO
 from typing import Dict, Sequence, Tuple
 
+
 _OPTION: Tuple[str, Dict, bool] = ("?", {}, False)
 _OPEN_PARENTHESIS: Tuple[str, Dict, bool] = ("(?:", {}, False)
 _CLOSE_PARENTHESIS: Tuple[str, Dict, bool] = (")", {}, False)
@@ -11,7 +12,6 @@ _ALTERNATION: Tuple[str, Dict, bool] = ("|", {}, False)
 
 class _Trie:
     def __init__(self, words, left=r"\b", right=r"\b"):
-
         self.left = left
         self.right = right
         self.root = ({}, False)
@@ -25,7 +25,6 @@ class _Trie:
                 node, is_terminal = node[char]
 
     def _to_regex(self):
-
         stack = [(self.left,) + self.root]
         cumulative = StringIO()
 
@@ -83,8 +82,7 @@ class _Trie:
 
 
 def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
-    """
-    Create a string that represents a regular expression object from a set of strings
+    """Create a string that represents a regular expression object from a set of strings
 
     Parameters
     ----------
@@ -95,15 +93,16 @@ def make(words: Sequence[str], prefix: str = r"\b", suffix: str = r"\b"):
            Left delimiter for pattern
 
     suffix : str, optional
-            Right delimiter for pattern
+           Right delimiter for pattern
 
     Returns
     -------
-    String
+    : string
             A string representing a regular expression pattern
 
     Examples
     --------
+
     >>> import re
     >>> import trrex as tx
     >>> pattern = tx.make(["baby", "bat", "bad"])
